@@ -1,0 +1,81 @@
+<html>
+<head>
+  <title>ProteomeCommons.org IO Framework</title>
+  <link rel="stylesheet" type="text/css" href="../styles.css">
+</head>
+<body>
+<h1>ProteomeCommons.org IO Framework Tool Documentation</h1>
+<p>This is the formal documentation for the tools that come with this framework. The point of the framework isn't to provide a robust set of tools, but several handy utilities are included that both developers and researches may want to use. Each tool is described individually below. You may optionally use the following list of quick links.</p>
+<ul>
+  <li><a href="#printpeaklist">Extracting spectra/peak list data as plain text</a></li>
+  <li><a href="#pmodfinder">Potential Modification Finder</a></li>
+  <li><a href="#convertgui">Convert Peak List GUI (i.e. the on-line app)</a></li>
+  <ul>
+    <li><a href="#t2dexport">How to Convert T2D to mzData (or plain text)</a></li>
+  </ul>
+</ul>
+
+<h2><a name="printpeaklist"></a>Print Peak List</h2>
+<p>The PrintPeakList class is a tool that will read any file that the IO framework supports and display the contents in plain text. The tool is ideal for manually looking at what information is in a peak list file, and it works as a great interface for exposing MS and MSMS data to scripts.</p>
+<p>The tool is designed to be used by command-line. You only need to included one command, which is the name of the file to read.</p>
+<pre>java org.proteomecommons.io.util.PrintPeakList my-file.mzXML</pre>
+<p>Consider the above example. It will read the file "my-file.mzXML" and display the contents. Results would look similar to the following.</p>
+<pre>Unnammed Spectrum
+799.854849, 395.798
+799.87084, 382.773
+799.88683, 361.204
+799.902821, 361.204
+799.918813, 358.403
+799.934804, 337.255
+799.950796, 321.008
+799.966787, 333.754
+799.982779, 365.126
+799.998771, 385.154
+800.014763, 384.174...</pre>
+<p>Data will always be presented with an arbitrary name listed first then pairs of values on each subsequent line. The value pairs list the mz followed by the intensity.</p>
+<p>PeakListReader instances are loaded and used based on the GenericPeakListReader class. If you'd like to register your own custom reader, you may pass the command-line option "-reader" followed by the class name of your PeakListReaderFactory class and the regular expression that is to be used for identifying files. Here is a simple example.</p>
+<pre>java org.proteoemcommons.io.util.PrintPeakList -reader org.proteomecommons.io.txt.PlainTextPeakListReaderFactory .*txt myfile.txt</pre>
+<p>This example would load the given reader, "org.proteomecommons.io.txt.PlainTextPeakListReaderFactory", and use it to parse any file ending in "txt", which includes the file that the PrintPeakList class next tries to read, "myfile.txt". If you were developing a custom PeakListReader class, you could use this feature to test the reader. Just be sure that your custom reader class is in your Java classpath.</p>
+
+<h2><a name="pmodfinder"></a>Potential Modification Finder</h2>
+<p>This tool lets you scan a directory of peak lists and ask if any of those peak lists has a peak that hints at a potential modification. You can specify the mass of the modification you are interested in and the mass accuracy to use. Returned from the program is a list of peak lists that have a peak at the m/z corresponding to the parent ion lacking the potential modifications. This tool is commonly used to find modifications such as phosphorilation.</p>
+<ul>
+  <li>Execute: java -jar org.proteomecommons.io.util.PotentialModificationFinder</li>
+  <li>Example: java -jar org.proteomecommons.io.util.PotentialModificationFinder /peaklists/ --mz 80 --mz 98</li>
+</ul>
+
+<h2><a name="convert"></a><a name="convertgui"></a>Convert/Concatinate Peak List GUI</h2>
+<p>This is a simple GUI interface to a peak list conversion tool that can optionally concatinate files. Use of the tool is fairly straight forward. First launch the JNLP link, any web browser with Java 1.5+ support should work.</p>
+<p>Please note that the primary goal of the GUI tool is to provide conversion of peak list information (precursor and precursor fragment m/z, intensity, and charge information) between various formats. The primary intended use of this tool is to do such conversions and the majority of mass spectrometer file formats do not support verbose meta-data similar to that found in the mzXML and mzData. Support for conversion of non-peaklist meta-data is a difficult and sometimes impossible task that is partially available for applicable formats and will ideally be supported to the best of our abilities in future versions of the IO Framework.</p>
+<ul>
+  <li>Here is a link to the <a href="ConvertPeakList.jnlp">on-line GUI (click to run)</a></li>
+  <li>If you don't have Java Web Start installed, you can get it for free <a href="http://java.sun.com/products/javawebstart/index.jsp">here</a>.</li>
+</ul>
+<p>A window should pop up that looks like the following.</p>
+<image src="convert-1.jpg">
+<p>Click on the input files box to select which files you would like to convert.</p>
+<image src="convert-2.jpg">
+<p>After selecting the files, select the output format that you would like to use.</p>
+<image src="convert-3.jpg">
+<p>Click the "convert" button to convert the files or optionally select either a directory for the converted files to be placed in or a single file that all the converted files should be concatinated into. You can skip this last step if you just want to convert the files and you want the conversions to be placed in the same directory as the original files.</p>
+
+<h2><a name="convert"></a><a name="t2dexport"></a>How to Convert T2D to mzData (or plain text)</h2>
+<p>This special T2D export section has been added due to popular request. The T2D file format is a binary file format that is very tricky to read. Not only are T2D files unreadable by tools such as notepad, but the T2D file doesn't store data using the common m/z and intensity pairs. If you are using the IO framework you can easily convert T2D data to a well-known file format or a plain text files.</p>
+<p>Converting from T2D to a well-known file format is as simple as the following.</p>
+<ul>
+  <li>Launch the GUI that is shown in the <a href="#convert"></a> conversion section.</li>
+  <li>Select one or more T2D files as your input.</li>
+  <li>Select mzData (or any other format) as your output.</li>
+  <li>Click on the "Convert" buttton.</li>
+</ul>
+<p>Converting from T2D to a plain-text file is as simple as the following.</p>
+<ul>
+  <li>Launch the GUI that is shown in the <a href="#convert"></a> conversion section.</li>
+  <li>Select one or more T2D files as your input.</li>
+  <li>Select plain-text as your output. If you intend to use Notepad to read the data, select the "Notepad plain-text" option.</li>
+  <li>Click on the "Convert" buttton.</li>
+</ul>
+<p>That is it! There is no special trick, simply use the conversion tool provided in the IO framework.</p>
+
+</body>
+</html>

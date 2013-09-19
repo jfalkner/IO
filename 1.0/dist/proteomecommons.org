@@ -1,0 +1,9 @@
+<ProteomeCommons.org>
+  <Project
+    name="ProteomeCommons IO"
+    version="1.0">
+    <Author id="jfalkner@umich.edu"/>
+    <Description>An open-source framework for manipulating spectra and peak lists. This framework works with many different formats including popular formats such as Mascot Generic Format and Sequest's DTA format.</Description>
+    <Link type="Documentation" url="index.html"/>
+  </Project>
+</ProteomeCommons.org>

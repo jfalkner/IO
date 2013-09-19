@@ -1,0 +1,11 @@
+<ProteomeCommons.org>
+  <Project
+    name="ProteomeCommons IO"
+    version="2.0">
+    <Author id="jfalkner@umich.edu"/>
+    <Description>An open-source framework for manipulating spectra and peak lists. This framework works with many different formats including popular formats such as Mascot Generic Format and Sequest's DTA format.</Description>
+    <Link type="Documentation" url="index.html"/>
+    <Link type="Java API Documentation" url="docs/api/index.html"/>
+    <Link type="Packaged API (JAR)" url="ProteomeCommons.org-IO.jar"/>
+  </Project>
+</ProteomeCommons.org>

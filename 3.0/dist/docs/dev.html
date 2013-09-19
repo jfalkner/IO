@@ -1,0 +1,112 @@
+<html>
+<head>
+  <title>ProteomeCommons.org IO Framework</title>
+  <link rel="stylesheet" type="text/css" href="http://www.proteomecommons.org/styles.css">
+</head>
+<body>
+<h1>ProteomeCommons.org IO Framework Developer Documentation</h1>
+<p>This is the developer documentation for the ProteomeCommons.org IO Framework. Here is where you will find basic information on the design choices of this framework and how to use the framework's features.</p>
+<ul>
+  <li><a href="#basic">Factory Methods and Abstract Base Classes</a></li>
+  <li><a href="#memory">Memory Interface</a></li>
+  <li><a href="#stream">Stream Interface</a></li>
+  <li><a href="#codingyourown">Coding your own Reader/Writer</a></li>
+  <li><a href="#filters">Filters</a></li>
+  <li><a href="#peakpicking">Peak Picking</a></li>
+</ul>
+
+<h2><a name="basic">Factory Methods and Abstract Base Classes</a></h2>
+<p>The IO framework is based around several abstract base classes that represent the minimal amount of functionality that a spectrum, peak list, or a reader/writer should have. All code specific to a particular implementation of a peak list, spectrum, or reader/writer is included in an individual package, e.g. org.proteomecommons.io.mgf contains all the MGF file format code. During runtime a user is expected to use the factory methods of the PeakListReader, PeakListWriter, SpectrumReader and SpectrumWriter classes in order to get an appropriate instance of the associated class for the file format of interest. This design choice greatly simplifies how a user can access the frameworks functionality, and it also leaves lots of flexibility when supporting new file formats.</p>
+<p>In general, new readers and writers are created by invoking the newReader() or newWriter() method of either the PeakListReader, PeakListWriter, SpectrumReader or SpectrumWriter classes. The following code snippets illustrate how to obtain a new reader or writer for either peak lists or spectra.</p>
+<pre>// load the libraries
+import org.proteomecommons.io.*;
+...
+// get a reader based on file extension
+PeakListReader reader = PeakListReader.newReader("my-file.mgf");
+// use the reader
+...
+// get a writer based on file extension
+PeakListWriter writer = PeakListWriter.newWriter("output-file.dta");
+// use the writer
+...</pre>
+<p>And for spectra....</p>
+<pre>// load the libraries
+import org.proteomecommons.io.*;
+...
+// get a reader based on file extension
+SpectrumReader reader = SpectrumReader.newReader("my-file.mgf");
+// use the reader
+...
+// get a writer based on file extension
+SpectrumWriter writer = SpectrumWriter.newWriter("output-file.dta");
+// use the writer
+...</pre>
+
+
+<p>Note that the class returned by the factory classes is always an instance of PeakListReader, PeakListWriter, SpectrumReader, or SpectrumWriter. All of those are abstract classes. Specific implementations of those classes will be provided depending on the type of reading and or writing you intend to do. You can look at any of the existing packages (e.g. mgf, dta, pkl, txt) for examples.</p>
+
+<h2><a name="memory">Read/Write Memory Interfaces</a></h2>
+<p>The memory interface is designed to be as simple and intuitive to use as possible. Simply invoke the PeakListReader.getPeakList() method to read a peak list or the SpectrumReader.getSpectrum() method to get a spectrum. Similarly, the PeakListWriter.writePeakList() and SpectrumWrtier.writeSpectrum() methods work in a similar fashion. The only downside to the memory interface is that it requires the entire peak list or spectrum to be present in memory in order to function. While this usually isn't an issue, it may be in situations where there is low memory or where you are attempting to handle an incredibly large peak list or spectrum.</p>
+<p>The basic technique for reading or writing a peak list is to invoke either the read() or write() methods on the appropriate reader or writer, or you can simply use the helper methods in the PeakListReader and PeakListWriter classes. The following code snippet gives an examples of using the helper interfaces.</p>
+<pre>// load the libraries
+import org.proteomecommons.io.*;
+...
+// load the peak list
+PeakList peaklist = PeakListReader.read("your-peaklist-file.mgf");
+// modify the peak list some
+...
+// write out the new peak list to a file
+PeakListWriter.write("output-file.dta");</pre>
+<p>And for spectra....</p>
+<pre>// load the libraries
+import org.proteomecommons.io.*;
+...
+// load the peak list
+Spectrum spectrum = SpectrumReader.read("your-spectrum-file.t2d");
+// modify the peak list some
+...
+// write out the new peak list to a file
+SpectrumWriter.write("output-file.txt");</pre>
+<p>Reading and writing peak lists or spectra is near trivial. If you wish to customize the reader or writer, you can invoke the non-static read() or write() methods on the appropriate instance of the classes.</p>
+
+
+<h2><a name="stream">Read/Write Stream Interfaces</a></h2>
+<p>The stream interfaces replicate the functionality of the memory interfaces but are stream-lined to require the lowest amount of memory as possible. There is a slight trade off in ease of use, but the interfaces allow this framework to be helpul in both low memory situations and when handling enormously large peak list of spectrum resources. The stream interface is broken down in to the following three primary methods: isStartOfPeakList()/isStartOfSpectrum(), hasNext(), and next(). The isStartOfX() methods return a boolean indicating if the current reader or writer is ast the start of a peak list or spectrum. The hasNext() method indicates if there is more data available in the given peak list or spectrum resource. The next() method returns the next Peak or spectrum point. The overall functionality is similar to using standard Java Iterator classes for reading through a list.</p>
+<p>Use of the stream interfaces in code is slightly more complex but still simple to use. Here is an example of stream reading a collection of peak lists encoded in MGF format.</p>
+<pre>PeakListReader reader = PeakListReader.newReader("your-peaklist-file.mgf");
+while (reader.isStartOfPeakList()) {
+  // write the peaks
+  while (reader.hasNext()) {
+    // get the next peak
+    Peak p = reader.next();
+    // handle the peak as you please
+    ...
+  }
+}</pre>
+<p>And for spectrum sources....</p>
+
+<pre>SpectrumReader reader = SpectrumReader.newReader(args[0]);
+// go through all the peaklists in a single file
+while (reader.isStartOfSpectrum()) {
+  // get all the data points
+  while (reader.hasNext()) {
+    // get the next peak
+    double[] d = reader.next();
+    // handle the point
+    ...
+  }
+}</pre>
+<p>While slightly more complex than the memory interface, the stream interfaces still accomplish the same task. The difference is that parts of a peak list or spectrum are read or written serially instead of reading or writing an entire peak list or spectrum all at once.</p>
+
+<h2><a name="codingyourown">Coding your own Reader/Writer</a></h2>
+<p>Coding your own reader or writer is as simple as extending the appropriate base class, either SpectrumReader, SpectrumWriter, PeakListReader or PeakListWriter, and implementing the memory and stream interfaces. By convention, put all code associated with the class in a unique package, preferably named after the format that the code supports. If your format has more functionality that is currently present in the Spectrum and PeakList objects, <i><b>do not change them</b></i>, subclass them in your new package and add as many methods as you need. Other readers, writer, and users can cast PeakList and Spectrum objects in to the appropriate subclasses in order to use any functionality you've added.</p>
+
+<h2><a name="filters">Filters</a></h2>
+<p>Filters are a simple method of encapsulating code that modifies a peak list or spectra and exposing the functionality via one simple method, filter(). The PeakListFilter interface defines a filter() method for PeakList objects. The SpectrumFilter interface defines a filter() method for Spectrum objects. Returned from the methods is another PeakList or Spectrum, respectively, that may have been modified in any way by the encapsulated code. These filters are used either directly by applications or through the helper methods associated with the PeakList and Spectrum objects. If you'd like to see some examples, look in the org.proteomecommons.io.filters package.</p>
+
+<h2><a name="peakpicking">Peak Picking</a></h2>
+<p>Converting a Spectrum to a mono-isotopic, centroided list of peaks (i.e. a peak list) is a very common practice for mass spec data. The IO framwork provides an abstract method for plugging in your own peak picking modules that will convert spectra to peak lists. Implementation of this functionality is currently minimal and further documentation will be provided in later releases of the code. You can see the org.proteomecommons.io.peakpick package for examples.</p>
+
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!--
+  body {
+    font-family:arial;
+    font-size:12pt;
+  }
+  dt {
+    margin-top:10px;
+    font-weight:bold;
+  }
+  h1 {
+    font-family:Sans;
+    font-size:32pt;
+
+  }
+  h2 {
+    font-family:Sans;
+    font-size:17pt;
+    margin-bottom:3px;
+    padding-bottom;0px;
+    
+    border-color:black;
+    border-style:solid;
+    border-width:0px;
+    border-bottom-width:1px;
+  }
+  h3 {
+    font-family:Sans;
+    font-size:14pt;
+    margin-bottom:3px;
+    padding-bottom;0px;
+    
+    border-color:black;
+    border-style:solid;
+    border-width:0px;
+    border-bottom-width:1px;
+  }
+  a:visited {
+    color:#BB0000;
+  }
+  a:hover {
+    color:#666666;
+    background-color:#FFFFFF;
+    border-style:solid;
+    border-color:#000000;
+    border-width:1px;
+    text-decoration:none;
+    border-left-width:0px;
+    border-right-width:0px;
+    border-top-width:0px;
+  }
+  a {
+    border-width-bottom:1px;
+    text-decoration:none;
+    color:#BB0000;
+  }
+  .fileformat {
+    background-color:#DDDDDD;
+    font-weight:bold;
+    padding-left:3px;
+    padding-right:3px;
+  }
+
+  .highlight {
+    background-color:#DDDDDD;
+    font-weight:bold;
+    padding-left:3px;
+    padding-right:3px;
+  }
+  .reference {
+    font-size:10pt;
+    font-family:verdana;
+  }
+  dt {
+    border-color:black;
+    border-style:solid;
+    border-width:0px;
+    border-bottom-width:1px;
+    background:#eeeeee;
+    margin-left:5px;
+    padding:2px;
+  }
+  dd {
+
+  }
+
+// -->
+

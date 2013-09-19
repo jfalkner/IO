@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- JNLP file for the Falk search engine -->
+<jnlp spec="1.0+" codebase="http://www.proteomecommons.org/archive/1132593287263">
+  <information>
+    <title>ProteomeCommons.org Peak List Conversion Utility</title>
+    <vendor>ProteomeCommons.org</vendor>
+    <homepage href="http://www.proteomecommons.org/archive/1132593287263/index.html"/>
+    <description>A GUI for converting peak list files from one format to another using the ProteomeCommons.org IO Framework.</description>
+    <offline-allowed/>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5+"/>
+      <jar href="lib/ProteomeCommons.org-IO.jar"/>
+      <jar href="lib/ProteomeCommons.org-IO-T2D.jar"/>
+<!--      <jar href="lib/ProteomeCommons.org-IO-Waters.jar"/> -->
+      <jar href="lib/ProteomeCommons.org-JAF.jar"/>
+      <jar href="lib/jsr173_1.0_api.jar"/>
+      <jar href="lib/jsr173_1.0_ri.jar"/>
+  </resources>
+  <application-desc main-class="org.proteomecommons.io.gui.ConvertPeakListGUI"/>
+</jnlp>

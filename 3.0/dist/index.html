@@ -1,0 +1,115 @@
+<html>
+<head>
+  <title>ProteomeCommons.org IO Framework</title>
+  <link rel="stylesheet" type="text/css" href="http://www.proteomecommons.org/styles.css">
+</head>
+<body>
+<h1>ProteomeCommons.org IO Framework 3.0</h1>
+<p>This is a proper Java framework for handling spectra and peak lists. The framework can read and write to a number of different spectra and peak list formats, and the framework provides a simple, intuitive Java object model for working with spectra or peak lists. All classes support two methods of handling peak list and spectrum data, in-memory or stream. The in memory model parses entire peak list(s) or spetrum(a) in to memory all at once -- it is fast and easy to use. The stream method parses peak list(s) or spectrum(a) data in to memory as requested -- ideal for low memory use and handling of extremely large data sets.</p>
+<p>The goal of this framework is to support all the popular MS and MSMS data formats, and to eliminate any time or effort involved in figuring out how to read and write peak list or spectrum files.</p>
+<ul>
+  <li><a href="#credits">Credits</a></li>
+  <li><a href="#changes">Changes</a></li>
+  <li><a href="#formats">Supported Formats</a></li>
+  <li><a href="#examples">Examples/Utilites</a></li>
+  <li><a href="#faq">Frequently Asked Questions</a></li>
+  <li><a href="docs/dev.html">Developer Documentation</a></li>
+  <li><a href="docs/api/index.html">Java API Documentation</a></li>
+  <li><a href="#license">Licensing Information</a></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+<p>This is a project supported and contributed to by many different people. Here is a formal list of all of those who have submitted code and/or documentation.</p>
+<ul>
+  <li>Jayson Falkner - jfalkner@umich.edu</li>
+</ul>
+<p>Support for this project, in part, comes from the <a href="http://www.proteomeconsortium.org">National Resource for Proteomics and Pathways (NRPP), http://www.proteomeconsortium.org</a>.</p>
+
+<h2><a name="changes">Changes since 2.0</a></h2>
+<ul>
+  <li>Added a peak-picking framework for converting spectra in to peak lists.</li>
+  <li>Added the peak list filtering framework, including several example filters such as an intensity normalization filter, a intensity thresholding filter, a dynamic range filter, and a multicharge deconvolution filter.</li>
+  <li>Added full MGF read/write support, including all meta-information.</li>
+  <li>Added full PKL write support.</li>
+  <li>Added full DTA write support. If multiple peak lists are written, only the first is saved in the file.</li>
+  <li>Fixed DTA reader to properly convert m/z to what a mass spectrometer would observe.</li>
+  <li>Added utility class for streaming peak list conversion and streaming peak list printing.</li>
+  <li>Added an Frequently Asked Questions (FAQ) to the user documentation.</li>
+  <li>Added streaming write support for low memory environments.</li>
+  <li>Added proper PKL reade/write support.</li>
+</ul>
+
+<h2><a name="changes">Changes since 1.0</a></h2>
+<ul>
+  <li>Added PKL read support.</li>
+  <li>Added DTA read/write support.</li>
+  <li>Added example code for reading/printing peak list information. The program also serves as an abstraction point for piping peak list information in to a shell script.</li>
+  <li>Added example code for converting between peak list formats.</li>
+  <li>Updated Java Docs and fixed several formating bugs.</li>
+</ul>
+
+<h2><a name="formats">Peak List Formats Supported</a></h2>
+<p>The following peak list formats are supported, to the extend documented here.</p>
+<h3>Mascot Generic Format (MGF)</h3>
+<p>MGF file format support is based on Matrix Science LLC's generic format. Complete MGF format support is provided by this framework; however, meta-information support is not well tested.</p>
+
+<h3>Sequest DTA</h3>
+<p>DTA file format support is based on Finnigan's LCQ file format. Complete DTA file support is provided by this framework. Any file ending with ".dta" is treated as if it is in the sequest DTA format.</p>
+
+<h3>Micromass PKL</h3>
+<p>PKL file format support is based on Micromass's PKL file format. Complete read and write support for the PKL format is implemented, including multiple peak lists in a single file.</p>
+
+<h3>Plain Text</h3>
+<p>Read support is provided for spectra or peak lists that are in plain-text format with each peak's m/z value and intensity value on the same line and a single line for each peak.</p>
+
+
+<h2><a name="examples">Utilities</a></h2>
+<p>This IO library is useful for many different things, and a few tools are included to demonstrate how the IO library woks. Researchers may find these tools helpful for day-to-day use, and coders can use the source-code as an example of how to incorporate the ProteomeCommons.org IO library with their code.</p>
+<ul>
+  <li><a href="#printPeakList">Peak List Printer:</a> prints a peak list of any given format to standard out, in a standardized format. Well-suited for writing scripts.</li>
+  <li><a href="#printSpectrum">Spectrum Printer:</a> prints a spectrum of any given format to standard out, in a standardized format. Well-suited for writing scripts.</li>
+  <li><a href="#potentialModificationFinder">Potential Modification Finder:</a> A tool that scans a set of peak lists and looks for neutral losses of a specified amount.</li>
+  <li><a href="#convertPeakList">Peak List Converter:</a> A utility that converts a peak list from one format to another.</li>
+</ul>
+
+
+<h2><a name="potentialModificationFinder">Potential Modification Finder</a></h2>
+<p>This tool lets you scan a directory of peak lists and ask if any of those peak lists has a peak that hints at a potential modification. You can specify the mass of the modification you are interested in and the mass accuracy to use. Returned from the program is a list of peak lists that have a peak at the m/z corresponding to the parent ion lacking the potential modifications. This tool is commonly used to find modifications such as phosphorilation.</p>
+<ul>
+  <li>Execute: java -jar org.proteomecommons.io.util.PotentialModificationFinder</li>
+  <li>Example: java -jar org.proteomecommons.io.util.PotentialModificationFinder /peaklists/ --mz 80 --mz 98</li>
+</ul>
+
+<h2><a name="printPeakList">Print Peak List</a></h2>
+<p>This tool reads a given peak list from disk and prints out the parent ion m/z, the parent ion charge, the peaks and the peak intensities. Peaks are always printed in acending order and intensities are normalized [0-1].</p>
+<ul>
+  <li>Execute: java -jar org.proteomecommons.io.util.PrintPeakList</li>
+  <li>Example: java -jar org.proteomecommons.io.util.PrintPeakList my-file.mgf</li>
+</ul>
+
+<h2><a name="printSpectrum">Print Spectrum</a></h2>
+<p>This tool reads a given spectrum from disk and prints out the points.</p>
+<ul>
+  <li>Execute: java -jar org.proteomecommons.io.util.PrintSpectrum</li>
+  <li>Example: java -jar org.proteomecommons.io.util.PrintSpectrum my-file.t2d</li>
+</ul>
+
+<h2><a name="convertPeakList">Convert Peak List</a></h2>
+<p>This tool converts a given peak list to a another peak list. Formats are determined from the file extensions used for the input and output files.</p>
+<ul>
+  <li><a href="ConvertPeakList.jnlp">On-line GUI (click to run)</a></li>
+  <li>Execute: java -jar org.proteomecommons.io.util.ConvertPeakList</li>
+  <li>Example: java -jar org.proteomecommons.io.util.ConvertPeakList in-file.mgf out-file.dta</li>
+</ul>
+
+
+<h2><a name="faq"></a>Frequently Asked Questions (FAQ)</h2>
+<p>This is a list of frequently asked questions based on user e-mails from the <a href="http://www.proteomecommons.org">ProteomeCommons.org e-mail list</a>.</p>
+<h3>Why doesn't "<code>java -jar ProteomeCommons.org-IO.jar</code>" work?</h3>
+<p>The JAR file included with the code is not executable. It is intended to be used as a Java library, i.e. "java -cp ProteomeCommons.org-IO.jar <class file>". If you'd like to run the example programs from command line, try executing "<code>java -cp ProteomeCommons.org-IO.jar org.proteomecommons.io.util.PrintPeakList <i>peaklist file</i></code>", where you replace <i>peaklist-file</i> with the location of a real peak list.</p>
+
+<h2><a name="license">Licensing Information</a></h2>
+<p>The goal of this project is to provide free, open-source code that anyone may use as they please; However, everyting in this project is strictly licensed under the Apache 2.0 license. This protects the authors and contributors of this project, and it encourages fair use of the code. A copy of the Apache 2.0 license may be found on-line at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> or as plain text in the LICENSE.txt file included in this archive.</p>
+<p>In addition to the Apache 2.0 license it is requested that any person or organization that uses the Falk Model Project properly reference this project. In at least one public, appropriate place, please note that the "Falk Model Project" is being used, and provide a URL to the proteomecommons.org copy of this archive.</p>
+</body>
+</html>

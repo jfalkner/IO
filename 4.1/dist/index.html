@@ -1,0 +1,164 @@
+<html>
+<head>
+  <title>ProteomeCommons.org IO Framework</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<h1>ProteomeCommons.org IO Framework 3.0</h1>
+<p>This is a free, open-source, Java framework for handling spectra and peak list files. The framework can read and write to a number of different spectra and peak list formats, and the framework provides a simple, intuitive Java object model for working with spectra or peak lists. The overall goal of this project is to make working with peak list or spectral data easy, even if you are working with various different file formats or if you are working with incredibly large files. Additionally, we aren't trying to lock developers in to using Java. Utility programs are included that will translate peak list or spectral data in to a simple, plain text format that is well-suited for pasing via regular expressions in perl, python, vbscript, or any other programming language.</p>
+<p>In short, the goal of this framework is to support all the popular MS and MSMS data formats, and to eliminate any time or effort involved in figuring out how to read and write peak list or spectrum files.</p>
+<p>You may always find a current download of this framework at <a href="http://www.proteomecommons.org/current/531/">http://www.proteomecommons.org/current/531/</a></p>
+<ul>
+  <li><a href="#credits">Credits</a></li>
+  <li><a href="#changes">Changes</a></li>
+  <li><a href="#formats">Supported Formats</a></li>
+  <ul>
+    <li><a href="#dta">DTA</a></li>
+    <li><a href="#mgf">MGF</a></li>
+    <li><a href="#mzData">mzData</a></li>
+    <li><a href="#mzXML">mzXML</a></li>
+    <li><a href="#pkl">PKL</a></li>
+    <li><a href="#t2d">T2D</a></li>
+    <li><a href="#txt">TXT</a></li>
+    <li><a href="#wiff">WIFF</a></li>
+    <li><a href="#zip">ZIP compressed data</a></li>
+  </ul>
+  <li><a href="docs/tools.html">Examples/Utilites</a></li>
+  <li><a href="#faq">Frequently Asked Questions</a></li>
+  <li><a href="docs/dev.html">Developer Documentation</a></li>
+  <ul>
+    <li><a href="docs/api/index.html">Java API Documentation</a></li>
+  </ul>
+  <li><a href="#license">Licensing Information</a></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+<p>This is a project supported and contributed to by many different people. Here is a formal list of all of those who have submitted code and/or documentation.</p>
+<p>Primary developers and maintainers.</p>
+<ul>
+  <li>Jayson Falkner - jfalkner@umich.edu</li>
+</ul>
+<p>Code contributors, documentation contributors, and supporters.</p>
+<ul>
+  <li>Jarret Falkner - jar@cs.washington.edu</li>
+  <li>David Hancock - mail@davidhancock.com</li>
+  <li>Dominic Battre</li>
+</ul>
+<p>Support for this project, in part, comes from the <a href="http://www.proteomeconsortium.org">National Resource for Proteomics and Pathways (NRPP)</a>.</p>
+
+<h2><a name="changes">Changes since 4.0 (Minor Release 4.1)</a></h2>
+<ul>
+  <li>Updated user docs with an explicit example of converting from T2D to plain text or mzData.</li>
+  <li>Added in the IO-T2D project libraries. Users can now read and write in Applied Biosystem's T2D format.</li>
+  <li>Added in Jarret Falkner's mzData writing code. mzData files may now be created via the framework.</li>
+</ul>
+
+<h2><a name="changes">Changes since 3.0 (Major Release 4.0)</a></h2>
+<ul>
+  <li>Added support for reading any known format that is compressed in a ZIP archive. Now you can compress your peak list data and not have to worry about decompressing it before using the framework.</li>
+  <li>Added Jarret Falkner's mzData file format support. Peak Lists and spectra in mzData format can now be read.</li>
+  <li>Added Jarret Falkner's mzXML file format support. Peak Lists and spectra in mzXMl format can now be read.</li>
+  <li>Simplified Reader/Writer testing. The framework now lets you specify/load custom reader and writer objects, which means it is easier than every to test your code.</li>
+  <li>Dominic Battre's MGF reader patch has been applied. The MGF reader is now handles comments and various different uses of whitespace characters.</li>
+  <li>Developers can now dynamically register PeakListReader and PeakListWriter objects for use with the framework.</li>
+</ul>
+
+<h2><a name="changes">Changes since 2.0 (Major Release 3.0)</a></h2>
+<ul>
+  <li>Added FASTA utility programs including a protein parser, a tryptic peptide parser, and a statics generator.</li>
+  <li>Added a peak-picking framework for converting spectra in to peak lists.</li>
+  <li>Added the peak list filtering framework, including several example filters such as an intensity normalization filter, a intensity thresholding filter, a dynamic range filter, and a multicharge deconvolution filter.</li>
+  <li>Added full MGF read/write support, including all meta-information.</li>
+  <li>Added full PKL write support.</li>
+  <li>Added full DTA write support. If multiple peak lists are written, only the first is saved in the file.</li>
+  <li>Fixed DTA reader to properly convert m/z to what a mass spectrometer would observe.</li>
+  <li>Added utility class for streaming peak list conversion and streaming peak list printing.</li>
+  <li>Added an Frequently Asked Questions (FAQ) to the user documentation.</li>
+  <li>Added streaming write support for low memory environments.</li>
+  <li>Added proper PKL reade/write support.</li>
+</ul>
+
+<h2><a name="changes">Changes since 1.0 (Major Release 2.0)</a></h2>
+<ul>
+  <li>Added PKL read support.</li>
+  <li>Added DTA read/write support.</li>
+  <li>Added example code for reading/printing peak list information. The program also serves as an abstraction point for piping peak list information in to a shell script.</li>
+  <li>Added example code for converting between peak list formats.</li>
+  <li>Updated Java Docs and fixed several formating bugs.</li>
+</ul>
+
+<h2><a name="knownformats">Known Formats</a></h2>
+<p>The following peak list formats are supported, to the extend documented here.</p>
+<h3><a name="mgf"></a>Mascot Generic Format (MGF)</h3>
+<p>MGF file format support is based on Matrix Science LLC's generic format. Complete MGF format support is provided by this framework; however, meta-information support is not well tested.</p>
+
+<h3><a name="dta"></a>Sequest DTA</h3>
+<p>DTA file format support is based on Finnigan's LCQ file format. Complete DTA file support is provided by this framework. Any file ending with ".dta" is treated as if it is in the sequest DTA format.</p>
+
+<h3><a name="pkl"></a>Micromass PKL</h3>
+<p>PKL file format support is based on Micromass's PKL file format. Complete read and write support for the PKL format is implemented, including multiple peak lists in a single file.</p>
+
+<h3><a name="txt"></a>Plain Text</h3>
+<p>Read support is provided for spectra or peak lists that are in plain-text format with each peak's m/z value and intensity value on the same line and a single line for each peak. Specialized support existing for both MS Windows and non-Windows users, particularly support for people who want to look at spectra in notepad.</p>
+
+<h3><a name="wiff"></a>Agilent QS WIFF</h3>
+<p>Support is implemented for reading plain-text WIFF exports from Analyst QS. Full support for the WIFF file format is in the works, and if you are interested in helping please contact <a href="mailto:jfalkner@umich.edu">Jayson Falkner</a>.</p>
+
+<h3><a name="t2d"></a>Applied Biosystems T2D</h3>
+<p>Complete support is provided for reading and writing files in the T2D format. The support is based on the ProteomeCommons.org IO-T2D project, which was created in collaboration with Applied Biosystems. Further documentation may be found in the "ProteomeCommons.org IO-T2D" project at <a href="http://www.proteomecommons.org">ProteomeCommons.org</a></p>
+
+<h3><a name="raw"></a>Thermo Finnigan RAW</h3>
+<p>Support for reading and writing Thermo Finnigan's RAW file format is in progress. Please contact <a href="mailto:jfalkner@umich.edu">Jayson Falkner</a> if you are interested in helping.</p>
+
+<h3><a name="mzXML"></a>Systems Biology mzXML</h3>
+<p>mzXML is an open, XML based file format designed by Systems Biology. The framework supports reading either peak list or spectral data that is in the mzXML file format support as described n the <a href="http://sashimi.sourceforge.net/software_glossolalia.html">mzXML schema and documentation</a>. This framework provides read support of peak lists and spectra in *.mzXML files. Proper stream-based XML parsing is used, allowing for mzXML files of any size to be used. Proper Base64 decoding is also used, allowing for data in either 32 bit or 64 bit precision.</p>
+<p>Helpful mzXML links.</p>
+<ul>
+  <li><a href="http://sashimi.sourceforge.net/software_glossolalia.html">mzXML homepage</a></li>
+  <li><a href="http://sashimi.sourceforge.net/schema_revision/mzXML_2.1/mzXML_idx_2.1.xsd">mzXML schema</a></li>
+  <li><a href="http://sashimi.sourceforge.net/schema_revision/mzXML_2.1/Doc/mzXML_2.1_tutorial.pdf">mzXML supplementary documentation</a></li>
+</ul>
+
+<h3><a name="mzData"></a>HUPO mzData</h3>
+<p>mzData is an open, XML based file format designed by US HUPO. The framework supports reading and writing data that is in the mzData file format as defined by the <a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.xsd">schema</a> and accompanying <a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.html">documentation</a>. Proper stream-based XML parsing is used, allowing for mzData files of any size to be used. Proper Base64 decoding is also used, allowing for data in either big endian or little endian format and data in either 32 bit or 64 bit precision.</p>
+<p>Helpful mzData links.</p>
+<ul>
+  <li><a href="http://psidev.sourceforge.net/ms/#mzdata">mzData homepage</a></li>
+  <li><a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.xsd">mzData schema</a></li>
+  <li><a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.html">mzData supplementary documentation</a></li>
+  <li><a href="https://sourceforge.net/project/showfiles.php?group_id=65472">mzData example files</a></li>
+  <li><a href="https://lists.sourceforge.net/lists/listinfo/psidev-ms-dev">mzData e-mail list</a></li>
+</ul>
+
+<h3><a name="zip"></a>ZIP Data</h3>
+<p>ZIP compression is not a  MS or MSMS data format. It is a compression algorithm that optimizes the amount of space a file requires. You can ZIP compress any file and the file will shrink in size, unless it is already compressed. In general, plain text files compress very well and you can save a lot of space by compressing your peak list files.</p>
+<p>The IO Framework provides seamless support for ZIP compressing any of the other formats. Simply ZIP compress any of your data and save it with ".zip" added to the file name, e.g. "example.mgf" would be compressed and saved as "example.mgf.zip". The framework will automatically decompress or compress files with such naming and pass the uncompressed data along to the appropriate code in the IO framework.</p>
+<p>If you don't already have it, <a href="http://www.info-zip.org/pub/infozip/Zip.html">here is free ZIP code</a> for every major operating system.</p>
+
+<h2><a name="faq"></a>Frequently Asked Questions (FAQ)</h2>
+<p>This is a list of frequently asked questions based on user e-mails from the <a href="http://www.proteomecommons.org">ProteomeCommons.org e-mail list</a>.</p>
+<ul>
+  <li><a href="#whereconvert">Where is that peak list conversion tool?</a></li>
+  <li><a href="#whydoesntjar">Why doesn't "<code>java -jar ProteomeCommons.org-IO.jar</code>" work?</a></li>
+  <li><a href="#wheredoigethelp">Where do I get help?</a></li>
+  <li><a href="#dontemailus">Why shouldn't I ask the developers how to use their code?</a></li>
+</ul>
+
+<h3><a name="whereconvert"></a>Where is that peak list conversion tool?</h3>
+<p>The on-line GUI tool that converts peak lists is <a href="ConvertPeakList.jnlp">here</a>.</p>
+
+<h3><a name="whydoesntjar"></a>Why doesn't "<code>java -jar ProteomeCommons.org-IO.jar</code>" work?</h3>
+<p>The JAR file included with the code is not executable. It is intended to be used as a Java library, i.e. "java -cp ProteomeCommons.org-IO.jar <class file>". If you'd like to run the example programs from command line, try executing "<code>java -cp ProteomeCommons.org-IO.jar org.proteomecommons.io.util.PrintPeakList <i>peaklist file</i></code>", where you replace <i>peaklist-file</i> with the location of a real peak list.</p>
+
+<h3><a name="wheredoigethelp"></a>Where do I get help?</h3>
+<p>Generally speaking, this is free, open-source code. You don't get free tech support with your download. However, there are options for getting help. The best help comes straight from the people who made this code. If you are willing to hire the core developers to help with your problem or to teach you how the framework works, contact <a href="jfalkner@umich.edu">Jayson Falkner</a>. If you want free help, use the e-mail list at ProteomeCommons.org. Most of the developer and users of this framework are on that e-mail list, and it is the appropriate place to look for free advice.</p>
+
+<h3><a name="dontemailus"></a>Why shouldn't I ask the developers how to user their code?</h3>
+<p>This is free, open-source code. You don't get free tech support with your download, and the developers of this project don't appreciate it when you try directly ask them how to use the code. If think the project is helpful, that is great, but please use the <a href=#wheredoigethelp"">suggested methods</a> for getting your user-related questions answered.</p>
+
+
+<h2><a name="license">Licensing Information</a></h2>
+<p>The goal of this project is to provide free, open-source code that anyone may use as they please; However, everyting in this project is strictly licensed under the Apache 2.0 license. This protects the authors and contributors of this project, and it encourages fair use of the code. A copy of the Apache 2.0 license may be found on-line at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> or as plain text in the LICENSE.txt file included in this archive.</p>
+<p>In addition to the Apache 2.0 license it is requested that any person or organization that uses the Falk Model Project properly reference this project. In at least one public, appropriate place, please note that the "Falk Model Project" is being used, and provide a URL to the proteomecommons.org copy of this archive.</p>
+</body>
+</html>

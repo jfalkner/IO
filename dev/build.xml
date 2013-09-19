@@ -1,0 +1,226 @@
+<project name="ProteomeCommons.org Server Libraries" default="dist" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="dist.website" location="dist.website"/>
+  <property name="lib"  location="lib"/>
+
+  <!-- load properties from build.properties -->
+  <property file="build.properties" />
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init"
+        description="compile the source " >
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac srcdir="${src}" destdir="${build}" extdirs="${lib}"/>
+    
+    <!-- copy over the files -->
+    <copy todir="${build}/images">
+      <fileset dir="${src}/images"/>
+    </copy>
+  </target>
+
+  <!-- Creates this project's website -->
+  <target name="dist.website" depends="compile"
+      description="generate the distribution" >
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist.website}"/>
+
+    <!-- copy all non-java files from test to dest dir -->
+    <copy todir="${dist.website}/lib">
+      <fileset dir="${lib}"/>
+    </copy>
+
+    <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+    <jar jarfile="${dist.website}/lib/ProteomeCommons.org-IO.jar" basedir="${build}"/>
+
+    <!-- copy all the plain files associated with the webapp -->
+    <copy todir="${dist.website}">
+      <fileset dir="dist"/>
+    </copy>
+    
+    <!-- replace all placeholder tokens -->
+    <replace dir="${dist.website}" token="@buildNumber" value="${buildNumber}" />
+    <replace dir="${dist.website}" token="@versionNumber" value="${versionNumber}" />
+
+    <!-- set the jar's base name and sign the JAR -->
+    <antcall target="sign-jars" />
+    
+    <!-- make the JavaDocs -->
+    <antcall target="javadoc" />
+
+    <!-- make a zip of the whole release -->
+    <zip destfile="website.zip" basedir="${dist.website}" />
+  </target>
+  
+  <!-- Sign a distribution of the code. It is assumed that the dist.website task is called before this. The task isn't required so that users who don't care about signing code aren't bothered by needed to set the Ant variables. -->
+  <target name="sign-jars">
+    <!-- sign ProteomeCommons.org-IO.jar -->
+    <signjar jar="${dist.website}/lib/ProteomeCommons.org-IO.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign ProteomeCommons.org-JAF.jar -->
+    <signjar jar="${dist.website}/lib/ProteomeCommons.org-JAF.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign jsr173_1.0_ri.jar -->
+    <signjar jar="${dist.website}/lib/jsr173_1.0_ri.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+	     
+    <!-- extract/clean/sign jsr173_1.0_api.jar -->
+    <property name="jsr173_1.0_api.jar" value="${dist.website}/lib/jsr173_1.0_api.jar" />
+    <property name="jsr173_1.0_api" value="${dist.website}/lib/jsr173_1.0_api" />
+    <unzip src="${jsr173_1.0_api.jar}" dest="${jsr173_1.0_api}">
+      <patternset>
+        <exclude name="**/*.RSA"/>
+        <exclude name="**/*.rsa"/>
+        <exclude name="**/*.sf"/>
+        <exclude name="**/*.SF"/>
+      </patternset>
+    </unzip>    
+    <delete file="${jsr173_1.0_api.jar}"/>    
+    <zip destfile="${jsr173_1.0_api.jar}" basedir="${jsr173_1.0_api}"/>
+    <delete dir="${jsr173_1.0_api}"/>
+    <signjar jar="${jsr173_1.0_api.jar}" alias="${keystoreAlias}" keystore="${keystore}" storepass="${keystorePassword}"/>
+
+	     
+    <!-- sign ProteomeCommons.org-IO-T2D.jar -->
+    <signjar jar="${dist.website}/lib/ProteomeCommons.org-IO-T2D.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign commons-codec-1.3.jar -->
+    <signjar jar="${dist.website}/lib/commons-codec-1.3.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign commons-logging.jar -->
+    <signjar jar="${dist.website}/lib/commons-logging.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign commons-logging-api.jar -->
+    <signjar jar="${dist.website}/lib/commons-logging-api.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+    <!-- sign commons-httpclient-3.0-rc4.jar -->
+    <signjar jar="${dist.website}/lib/commons-httpclient-3.0-rc4.jar"
+             alias="${keystoreAlias}"
+             keystore="${keystore}"
+             storepass="password"
+             verbose="false"/>
+
+
+    <!-- extract/clean/sign jaxb-api.jar -->
+    <property name="jaxb-api.jar" value="${dist.website}/lib/jaxb-api.jar" />
+    <property name="jaxb-api" value="${dist.website}/lib/jaxb-api" />
+    <unzip src="${jaxb-api.jar}" dest="${jaxb-api}">
+      <patternset>
+        <exclude name="**/*.RSA"/>
+        <exclude name="**/*.rsa"/>
+        <exclude name="**/*.sf"/>
+        <exclude name="**/*.SF"/>
+      </patternset>
+    </unzip>    
+    <delete file="${jaxb-api.jar}"/>    
+    <zip destfile="${jaxb-api.jar}" basedir="${jaxb-api}"/>
+    <delete dir="${jaxb-api}"/>
+    <signjar jar="${jaxb-api.jar}" alias="${keystoreAlias}" keystore="${keystore}" storepass="${keystorePassword}"/>
+
+
+    <!-- extract/clean/sign jaxb-impl.jar -->
+    <property name="jaxb-impl.jar" value="${dist.website}/lib/jaxb-impl.jar" />
+    <property name="jaxb-impl" value="${dist.website}/lib/jaxb-impl" />
+    <unzip src="${jaxb-impl.jar}" dest="${jaxb-impl}">
+      <patternset>
+        <exclude name="**/*.RSA"/>
+        <exclude name="**/*.rsa"/>
+        <exclude name="**/*.sf"/>
+        <exclude name="**/*.SF"/>
+      </patternset>
+    </unzip>    
+    <delete file="${jaxb-impl.jar}"/>    
+    <zip destfile="${jaxb-impl.jar}" basedir="${jaxb-impl}"/>
+    <delete dir="${jaxb-impl}"/>
+    <signjar jar="${jaxb-impl.jar}" alias="${keystoreAlias}" keystore="${keystore}" storepass="${keystorePassword}"/>
+
+	     
+    <!-- extract/clean/sign activation.jar -->
+    <property name="activation.jar" value="${dist.website}/lib/activation.jar" />
+    <property name="activation" value="${dist.website}/lib/activation" />
+    <unzip src="${activation.jar}" dest="${activation}">
+      <patternset>
+        <exclude name="**/*.RSA"/>
+        <exclude name="**/*.rsa"/>
+        <exclude name="**/*.sf"/>
+        <exclude name="**/*.SF"/>
+      </patternset>
+    </unzip>    
+    <delete file="${activation.jar}"/>    
+    <zip destfile="${activation.jar}" basedir="${activation}"/>
+    <delete dir="${activation}"/>
+    <signjar jar="${activation.jar}" alias="${keystoreAlias}" keystore="${keystore}" storepass="${keystorePassword}"/>
+    
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <!-- Delete the copied libs -->
+    <delete dir="${dist.website}"/>
+    <delete file="website.zip"/>
+  </target>
+  
+  <target name="javadoc">
+    <javadoc
+           destdir="${dist.website}/docs/api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="ProteomeCommons.org IO API">
+
+      <packageset dir="src" defaultexcludes="yes">
+        <include name="org/proteomecommons/io/**"/>
+      </packageset>
+
+      <doctitle><![CDATA[<h1>ProteomeCommons.org IO API</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Licensed for use under the Apache 2.0 license. See license.txt included with this downloads.</i>]]></bottom>
+      <tag name="todo" scope="all" description="To do:"/>
+      <group title="ProteomeCommons.org IO Framework" packages="org.proteomecommons.io.*"/>
+      <group title="Utility Code" packages="org.proteomecommons.io.util.*"/>
+      <link href="http://java.sun.com/products/jdk/1.4/docs/api/" />
+    </javadoc>
+  </target>
+
+</project>
+
+

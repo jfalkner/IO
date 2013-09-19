@@ -1,0 +1,226 @@
+[System Information]
+System Information
+================================================
+Module Name                    Part No.   Serial No.    FW Rev.   
+Binary Pump                    G1312A     DE23912656    A.05.04   
+Micro Wellplate Autosampler    G1377A     DE23900373    A.05.04   
+Nano Pump                      G2226A     DE31100160    A.05.05   
+Column Thermostat              G1316A     DE23932472    A.05.04   
+Sample Thermostat              G1330A     DE13204747    n/a       
+
+[Method Information]
+Method Information
+================================================
+     New valve control method 
+
+[Method Change History]
+Method Change History
+================================================
+Operator           Date                Change Information 
+d orth             9/5/2003 12:43:20 PM1st testing 
+d orth             9/5/2003 1:24:19 PM 
+d orth             9/5/2003 4:27:23 PM 
+d orth             9/9/2003 12:23:44 PM 
+pandeylab          9/9/2003 12:43:19 PM 
+pandeylab          9/9/2003 2:18:40 PM 
+pandeylab          9/9/2003 2:24:49 PM 
+pandeylab          9/9/2003 3:30:25 PM 
+pandeylab          9/10/2003 10:20:07 AM 
+pandeylab          9/10/2003 11:25:48 AM 
+pandeylab          9/10/2003 1:05:00 PM 
+pandeylab          9/10/2003 2:19:40 PM 
+pandeylab          9/10/2003 3:21:15 PM 
+pandeylab          9/10/2003 3:26:26 PM 
+pandeylab          9/11/2003 11:36:07 AM 
+pandeylab          9/12/2003 4:13:04 PM 
+pandeylab          9/12/2003 4:37:12 PM 
+pandeylab          9/12/2003 4:49:00 PM 
+pandeylab          9/12/2003 6:08:01 PM 
+pandeylab          9/13/2003 6:28:36 PM 
+pandeylab          9/14/2003 4:58:15 PM 
+pandeylab          9/14/2003 7:10:11 PM 
+pandeylab          9/15/2003 10:36:13 AM 
+pandeylab          9/16/2003 12:23:05 PM 
+pandeylab          9/16/2003 7:24:57 PM 
+pandeylab          9/17/2003 9:15:53 AM 
+pandeylab          9/17/2003 3:35:00 PM 
+pandeylab          9/22/2003 9:49:38 AM 
+pandeylab          9/22/2003 10:18:37 AM 
+pandeylab          9/22/2003 10:21:06 AM 
+pandeylab          9/22/2003 10:52:38 AM 
+pandeylab          9/22/2003 11:24:57 AM 
+molina             10/8/2003 1:39:23 PM 
+molina             10/8/2003 1:43:53 PM 
+molina             10/8/2003 1:48:58 PM 
+molina             10/9/2003 11:24:36 AM 
+molina             10/9/2003 11:30:23 AM 
+molina             10/9/2003 3:14:35 PM 
+molina             10/9/2003 3:56:45 PM 
+molina             10/10/2003 10:52:27 AM 
+molina             10/10/2003 2:01:25 PM 
+molina             10/10/2003 6:47:50 PM 
+molina             10/10/2003 7:07:38 PM 
+molina             10/12/2003 5:12:52 PM 
+molina             10/13/2003 2:43:10 PM 
+molina             10/13/2003 3:22:41 PM 
+molina             10/13/2003 3:23:20 PM 
+molina             10/13/2003 6:20:30 PM 
+molina             10/14/2003 9:11:45 PM 
+molina             10/15/2003 4:45:03 PM 
+                            Method Change History 
+Operator           Date                Change Information 
+molina             10/16/2003 11:12:27 AM 
+molina             10/30/2003 2:56:21 PM 
+molina             10/30/2003 4:40:22 PM 
+molina             10/31/2003 10:05:48 AM 
+molina             11/2/2003 10:58:26 AM 
+molina             11/4/2003 11:57:15 AM 
+molina             11/4/2003 1:01:39 PM 
+molina             11/6/2003 1:34:28 PM 
+molina             11/9/2003 5:29:03 PM 
+molina             11/10/2003 5:18:09 PM 
+molina             11/11/2003 6:40:57 PM 
+molina             11/12/2003 9:09:49 AM 
+molina             11/13/2003 3:59:25 PM 
+molina             11/13/2003 5:31:52 PM 
+molina             11/13/2003 5:48:48 PM 
+molina             1/16/2004 4:01:15 PM 
+molina             1/30/2004 1:16:50 PM 
+molina             1/30/2004 6:29:44 PM 
+molina             1/31/2004 2:26:17 PM 
+molina             1/31/2004 2:27:35 PM 
+molina             2/2/2004 12:07:45 PM 
+molina             2/4/2004 9:13:02 AM 
+molina             2/4/2004 12:11:08 PM 
+molina             2/5/2004 4:40:43 PM 
+
+[Run Time Checklist]
+Run Time Checklist
+================================================
+            Pre-Run Cmd/Macro:  off
+             Data Acquisition:  on
+       Standard Data Analysis:  off
+     Customized Data Analysis:  off
+                Save GLP Data:  off
+           Post-Run Cmd/Macro:  off
+        Save Method with Data:  off
+
+[Pump]
+1100 Binary Pump 1
+================================================
+Control
+    Column Flow            :      0.000 ml/min
+    Stoptime               :      No Limit
+    Posttime               :      Off
+Solvents
+    Solvent A              :      100.0 % ( )
+    Solvent B              :      Off
+PressureLimits
+    Minimum Pressure       :        0 bar
+    Maximum Pressure       :      400 bar
+Auxiliary
+    Maximal Flow Ramp      :      100.00 ml/min^2
+    Compressibility A      :       50*10^-6/bar
+    Minimal Stroke A       :      Auto
+    Compressibility B      :      115*10^-6/bar
+    Minimal Stroke B       :      Auto
+Store Parameters
+    Store Ratio A          :      Yes
+    Store Ratio B          :      Yes
+    Store Flow             :      Yes
+    Store Pressure         :      Yes
+Timetable is empty
+
+[Pump]
+1100 Nano Pump 2
+================================================
+Pump Mode
+    Mode                   :      Micro
+Control
+    Column Flow            :      4.000 µl/min
+    Stoptime               :         60.00 min
+    Fast Reconditioning    :      Off
+    Posttime               :      Off
+Solvents
+    Solvent A 1            :       95.0 % ( )
+    Solvent B 1            :        5.0 % ( )
+    Calibrated as          :      H2O-ACN (A:Aqueous  B:Acetonitrile)
+PressureLimits
+    Minimum Pressure       :        0 bar
+    Maximum Pressure       :      400 bar
+Auxiliary
+    Primary Flow           :      200 - 500 µl/min
+    Column Flow ready limit:      always
+    Compressibility A      :       50*10^-6/bar
+    Minimal Stroke A       :      Auto
+    Compressibility B      :      115*10^-6/bar
+    Minimal Stroke B       :      Auto
+Store Parameters
+    Store Ratio A          :      Yes
+    Store Ratio B          :      Yes
+    Store Flow             :      Yes
+    Store Pressure         :      Yes
+Timetable
+       Time    Solv.B   Flow  Pressure
+    |--------|-------|--------|-------|
+         0.00    5.0     4.000   400
+         7.00            4.000   400
+         8.00    8.0     1.000   400
+        12.00            1.000   400
+        15.00            0.300   400
+        35.00   45.0     0.300   400
+        37.00   90.0     0.300   400
+        46.00            0.300   400
+        47.00   90.0     1.000   400
+        48.00    5.0     1.000   400
+        51.00    5.0     1.000   400
+        55.00    5.0     4.000   400
+
+[Autosampler]
+1100 Micro Wellplate Autosampler 1
+================================================
+Injection
+    Injection Volume        :     5.000 µl
+    Injection Mode          :    Injector Program
+Time
+    Stoptime                :      As Pump
+    Posttime                :      Off
+High Throughput
+Autom. Delay Vol. Reduction :     Off
+    Overlapped Injection    :     disabled
+Needle Wash
+    Wash Mode               :    Wash in Flushport
+    Wash Time               :   99.0 s
+    Wash Location           :    Vial 6
+    Repeat                  :    1 times
+Auxiliary
+    Drawspeed               :     10 µl/min
+    Ejectspeed              :      5 µl/min
+    Draw Position           :    0.0 mm
+    Equilibration Time      :    2.0 sec
+    Sample Flush-Out Factor :    3.0 times Injection Volume
+    Vial/Well Bottom Sensing:   Yes
+    Store Temperature       :    Yes
+Injector program table
+      Row   Action
+    |-----|---------------------------------------------------------|
+        1   DRAW def. amount from sample, def. speed, def. offset
+        2   INJECT
+        3   WAIT 7.00 min
+        4   VALVE bypass
+        5   NEEDLE wash in flush port, 99.0 sec
+
+[Thermostat]
+Agilent 1100 Column Thermostat 1
+================================================
+Temperature settings
+    Left temperature       :      Not controlled
+    Right temperature      :      Same as left
+    Enable analysis        :      When Temp. is within setpoint +/-  0.8°C
+    Store left temperature :      Yes
+    Store right temperature:      No
+Time
+    Stoptime               :      As pump
+    Posttime               :      Off
+Column Switching Valve     :      Column 1
+Timetable is empty

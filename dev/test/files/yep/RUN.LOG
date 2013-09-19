@@ -1,0 +1,28 @@
+ 443 41e0 4022e297  1ff
+Method       Method started:  line# 1 at P2-F-03 inj# 1     16:40:55 02/05/04
+  67 41e0 4022e297    0
+Method       Instrument running sample P2-F-03              16:40:55 02/05/04
+   0 1da6 4022e2eb  500
+1100 PMP   1 Pressure = 0.7 bar                             16:42:19 02/05/04
+   0 1da6 4022e2eb  500
+1100 PMP   1 Flow = 0.000 ml/min                            16:42:19 02/05/04
+   0 1da9 4022e2eb  500
+1100 THM   1 Column temperature (left)  = 27.8 °C           16:42:19 02/05/04
+   0 1da9 4022e2eb  500
+1100 THM   1 Column temperature (right) = 21.9 °C           16:42:19 02/05/04
+   0 1da7 4022e2eb  500
+1100 ALS   1 Air temperature (tray) = 5.9 °C                16:42:19 02/05/04
+   0 1da8 4022e2ec  500
+1100 PMP   2 Pressure = 147.5 bar                           16:42:20 02/05/04
+   0 1da9 4022e2f1  500
+1100 THM   1 Column temperature (left)  = 27.8 °C           16:42:25 02/05/04
+   0 1da9 4022e2f1  500
+1100 THM   1 Column temperature (right) = 21.9 °C           16:42:25 02/05/04
+   0 1da8 4022f0fb  500
+1100 PMP   2 Pressure = 152.9 bar                           17:42:19 02/05/04
+   0 1da6 4022f0fb  500
+1100 PMP   1 Pressure = 0.7 bar                             17:42:19 02/05/04
+  67 41e0 4022f0fe    0
+Method       Instrument run completed                       17:42:22 02/05/04
+  67 41e0 4022f101    0
+Method       Method completed                               17:42:25 02/05/04

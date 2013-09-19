@@ -1,0 +1,61 @@
+<html>
+<h1>ProteomeCommons.org IO Framework 1.0</h1>
+<p>This is a proper Java framework for handling spectra and peak lists. The framework can read and write to a number of different spectra and peak list formats, and the framework provides a simple, intuitive Java object model for working with spectra or peak lists. All classes support two methods of handling peak list and spectrum data, in-memory or stream. The in memory model parses entire peak list(s) or spetrum(a) in to memory all at once -- it is fast and easy to use. The stream method parses peak list(s) or spectrum(a) data in to memory as requested -- ideal for low memory use and handling of extremely large data sets.</p>
+<p>The goal of this framework is to support all the popular MS and MSMS data formats, and to eliminate any time or effort involved in figuring out how to read and write peak list or spectrum files.</p>
+<ul>
+  <li><a href="#credits">Credits</a></li>
+  <li><a href="#formats">Supported Formats</a></li>
+  <li><a href="#examples">Examples</a></li>
+  <li><a href="#license">Licensing Information</a></li>
+</ul>
+
+<h2><a name="credits">Credits</a></h2>
+<p>This is a project supported and contributed to by many different people. Here is a formal list of all of those who have submitted code and/or documentation.</p>
+<ul>
+  <li>Jayson Falkner - jfalkner@umich.edu</li>
+</ul>
+<p>Support for this project, in part, comes from the <a href="http://www.proteomeconsortium.org">National Resource for Proteomics and Pathways (NRPP), http://www.proteomeconsortium.org</a>.</p>
+
+<h2><a name="formats">Peak List Formats Supported</a></h2>
+<p>The following peak list formats are supported, to the extend documented here.</p>
+<h3>Mascot Generic Format (MGF)</h3>
+<p>Mostly complete support is implemented for reading and writing Mascot Generic Format files. Peak list information, parent ion charge, and parent ion mass information is preserved, but the other meta-information an MGF file may maintain is not.</p>
+
+<h3>DTA</h3>
+<p>DTA files may be read by this framework.</p>
+
+<h2><a name="examples">Examples</a></h2>
+<p>This IO library is useful for many different things, and a few tools are included to demonstrate how the IO library woks. Researchers may find these tools helpful for day-to-day use, and coders can use the source-code as an example of how to incorporate the ProteomeCommons.org IO library with their code.</p>
+<ul>
+  <li><a href="#parsingAPeakList">A code snippet demonstrating how to parse a peak list.</a></li>
+  <li><a href="#potentialModificationFinder">An example class that demonstrates using the I/O framework to scan a collection of peak lists and identify which peak lists may have a potential modification.</a></li>
+  <di></di>
+</ul>
+<h2><a name="parsingAPeakList">Parsing a Peak List</a></h2>
+<p>It is near trivial to parse a peak list from a file in a known format. The code is the following:</p>
+<pre>
+// load the libraries
+import org.proteomecommons.io.*;
+...
+// load the peak list
+PeakList peaklist = PeakListReader.read("your-peaklist-file.mgf");
+// modify the peak list some
+...
+// write out the new peak list to a file
+PeakListWriter.write(peaklist, ".mgf");
+</pre>
+<p>The PeakList object provides the parent ion m/z(if available), the parent ion charge (if available), and a list of m/z and intensity pairings. Any Java program will quickly be able to load and analyze peak lists using this object. For other information that may be specific to a particular type of peak list format, simply cast the PeakList object in to an appropriate sub-class. There is an appropriate PeakListReader/PeakListWriter implementation for each peak list format supported by this framework. Along with those implementations are classes that deal with handling any additional information peak list formats may provide. See the <a href="docs/api/index.html">Java docs</a> for more information.</p>
+
+
+<h2><a name="potentialModificationFinder">PotentialModificationFinder.java</a></h2>
+<p>This tool lets you scan a directory of peak lists and ask if any of those peak lists has a peak that hints at a potential modification. You can specify the mass of the modification you are interested in and the mass accuracy to use. Returned from the program is a list of peak lists that have a peak at the m/z corresponding to the parent ion lacking the potential modifications. This tool is commonly used to find modifications such as phosphorilation, e.g. "java -jar PotentialModificationFinder.jar /peaklists/ --mz 80 --mz 98"</p>
+<ul>
+<!--  <li><a href="examples/potentialModificationFinder.jnlp">Java Web Start Link (i.e. one-click run the code via your web browser)</a></li> -->
+  <li><a href="src/org/proteomecommons/io/util/PotentialModificationFinder.java">Source-Code</a></li>
+</ul>
+
+<h2><a name="license">Licensing Information</a></h2>
+<p>The goal of this project is to provide free, open-source code that anyone may use as they please; However, everyting in this project is strictly licensed under the Apache 2.0 license. This protects the authors and contributors of this project, and it encourages fair use of the code. A copy of the Apache 2.0 license may be found on-line at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> or as plain text in the LICENSE.txt file included in this archive.</p>
+<p>In addition to the Apache 2.0 license it is requested that any person or organization that uses the Falk Model Project properly reference this project. In at least one public, appropriate place, please note that the "Falk Model Project" is being used, and provide a URL to the proteomecommons.org copy of this archive.</p>
+
+</html>

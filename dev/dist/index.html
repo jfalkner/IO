@@ -1,0 +1,583 @@
+<html>
+<head>
+  <title>ProteomeCommons.org IO Framework @versionNumber</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+<h1>ProteomeCommons.org IO Framework @versionNumber</h1>
+<p>This is a free, open-source, Java framework for handling spectra and peak list files. The framework can read and write to a number of different spectra and peak list formats, and the framework provides a simple, intuitive Java object model for working with spectra or peak lists. The overall goal of this project is to make working with peak list or spectral data easy, even if you are working with various different file formats or if you are working with incredibly large files. Additionally, we aren't trying to lock developers in to using Java. Utility programs are included that will translate peak list or spectral data in to a simple, plain text format that is well-suited for passing via regular expressions in Perl, Python, VBScript, or any other programming language.</p>
+<p>In short, the goal of this framework is to support all the popular MS and MSMS data formats, and to eliminate any time or effort involved in figuring out how to read and write peak list or spectrum files.</p>
+<p>You may always find a current download of this framework at <a href="http://www.proteomecommons.org/current/531/">http://www.proteomecommons.org/current/531/</a>. If you'd like the source-code, please read the <a href="docs/dev.html">developer docs</a>.</p>
+
+<p><a href="docs/peakpicking.html"><b><i>Special notice:</i></b> please help us give the IO Framework a good peak picking algorithm!</a></p>
+
+<ul>
+  <li><a href="#credits">Credits</a></li>
+  <li><a href="#changes">Changes</a></li>
+  <li><a href="#formats">Known Formats</a></li>
+  <ul>
+    <li><a href="#abi">Applied Biosystems/Sciex: <span class="fileformat">.t2d</span>, <span class="fileformat">.bic</span>, and <span class="fileformat">.wiff</span></a></li>
+    <li><a href="#bruker">Bruker: <span class="fileformat">.baf</span>, <span class="fileformat">.fid</span>, <span class="fileformat">.yep</span>, and <span class="fileformat">AutoExecute runs of LCMALDI</span></a></li>
+    <li><a href="#mgf">Mascot Generic Format: <span class="fileformat">.mgf</span></a></li>
+    <li><a href="#mzData">Proteomics Standards Initiative (PSI): <span class="fileformat">mzData 1.04</span> and <span class="fileformat">mzData 1.05</span></a></li>
+    <li><a href="#dataXML">dataXML/massSpecXML: <span class="fileformat">dataXML 0.9 (beta support)</span></a></li>
+    <li><a href="#mzXML">mzXML: <span class="fileformat">mzXML 1.1.1</span>, <span class="fileformat">mzXML 2.0</span>, and <span class="fileformat">mzXML 2.1</span></a></li>
+    <li><a href="#pkl">Waters/Micromass: <span class="fileformat">.pkl</span> and <span class="fileformat">.raw/ (directory structure)</span></a></li>
+    <li><a href="#msp">National Institute of Standards and Technology (NIST) Library of Peptide Ion Fragmentation Spectra <span class="fileformat">.msp</span></a></li>
+    <li><a href="#txt">Plain Text: <span class="fileformat">.txt</span></a></li>
+    <li><a href="#dta">Sequest: <span class="fileformat">.dta</span></a></li>
+    <li><a href="#raw">Thermo Finnigan: <span class="fileformat">.raw</span></a></li>
+    <li><a href="#gpm">X!Tandem Output Files (aka TheGPM output) <span class="fileformat">.xml</span>, <span class="fileformat">.thegpm.xml</span>, <span class="fileformat">.tandem.xml</span>, <span class="fileformat">.amethyst.xml</span>, <span class="fileformat">.opal.xml</span>, <span class="fileformat">.jasper.xml</span></a></li>
+    <li><a href="#compression">Auto-compression/decompression Support</a></li>
+    <ul>
+      <li><a href="#zip">ZIP Format: <span class="fileformat">.zip</span></a></li>
+      <li><a href="#gzip">GZIP Format: <span class="fileformat">.gzip</span> and <span class="fileformat">.gz</span></a></li>
+      <li><a href="#b2zip">bzip2 Format: <span class="fileformat">.bzip2</span></a></li>
+      <li><a href="#lzma">LZMA Format (also known as 7zip's compression algorithm): <span class="fileformat">.lzma</span></a></li>
+    </ul>
+  </ul>
+  <li><a href="docs/peakpicking.html">Pick picking algorithm - we need your help!</a></li>
+  <li><a href="docs/tools.html">Examples/Utilities</a></li>
+  <li><a href="#faq">Frequently Asked Questions</a></li>
+  <li><a href="docs/dev.html">Developer Documentation</a></li>
+  <ul>
+    <li><a href="docs/api/index.html">Java API Documentation</a></li>
+  </ul>
+  <li><a href="#links">Links to other projects that Read/Write these files formats</a></li>
+  <li><a href="#todo">TODO List</a></li>
+  <li><a href="#license">Licensing Information</a></li>
+</ul>
+
+<h2><a name="credits"></a>Credits</h2>
+<p>This is a project supported and contributed to by many different people. Here is a formal list of all of those who have submitted code and/or documentation.</p>
+<p>Primary developers and maintainers.</p>
+<ul>
+  <li>Jayson Falkner - jfalkner@umich.edu</li>
+</ul>
+<p>Code contributors, documentation contributors, and supporters.</p>
+<ul>
+  <li>Neil Swainston - neil.swainston@manchester.ac.uk</li>
+  <li>Panagiotis Papoulias, aka Takis - panagiot@umich.edu</li>
+  <li>Tomas Pluskal</li>
+  <li>Jarret Falkner - jar@cs.washington.edu</li>
+  <li>David Hancock - mail@davidhancock.com</li>
+  <li>Dominic Battre</li>
+</ul>
+<p>Support for this project, in part, comes from the <a href="http://www.proteomeconsortium.org">National Resource for Proteomics and Pathways (NRPP)</a>.</p>
+<h2><a name="changes"></a>Changes since 6.2 (@buildNumber)</h2>
+<ul>
+  <li>Added support for the beta version of the dataXML efforts (merge of mzXML and mzData)</li>
+</ul>
+<h2><a name="changes"></a>Changes since 6.1 (@buildNumber)</h2>
+<ul>
+  <li>Disabled the GUI helper that highlights boxes. It can be enabled by right-clicking and selecting the enable option.</li>
+  <li>Added a "Don't Convert" option. This option will cause the GUI not to convert an intermediate file. Click this option if you want to access the exact mzXML document generated by either ReAdW or CompassXport. This feature only works for those tools.</li>
+  <li>Added a helper message to the GUI stating, "Right-click for options (exit, etc.)" as per user request.</li>
+  <li>Added the ReduceMemoryUsageFilter class for reducing peak list information in order to save memory. This filter is handy if you are storing large amounts of peak lists in memory and you only care about m/z and intensity information.</li>
+  <li>Fixed the new GUI to behave well on smaller screen sizes.</li>
+</ul>
+<h2><a name="changes"></a>Changes since 6.0 (175)</h2>
+<ul>
+  <li>Updated the look and feel of the Peak List Conversion application.</li>
+  <li>Added a plain-text peak list reader so that users can very easily make their own peak lists.</li>
+  <li>Fixed the Notepad-Friendly text export to show output as expected. See docs.</li>
+  <li>Full read/write auto-compression support for GZIP, ZIP, bzip2, and LZMA (aka 7zip's algorithm) are now available. Test cases show that they work very well.</li>
+  <li>The RAW reading code now defaults to the well-known location described in the docs. If the GUI is running, it will prompt the user to locate ReAdW.exe.</li>
+  <li>Refactored mzData code to properly handle different versions. Support is now implemented for versions 1.05.</li>
+  <li>Refactored mzXML code to properly handle different versions. Near-complete support is now implemented for versions 1.1.1, 2.0, and 2.1.</li>
+  <li>Fixed a minor bug with the MGF writer where the "+" sign would not be included after positive charges, .e.g "CHARGE=2" versus the correct "CHARGE=2+"</li>
+  <li>DTA peaklists may now have more than one DTA in them. File names won't be correct; however, users can create the files.</li>
+  <li>MGF to PKL and MGF to DTA conversion now works as expected.</li>
+  <li>MGF peaklists no longer start with a blank line.</li>
+</ul>
+<h2><a name="changes"></a>Changes since 5.0 (150)</h2>
+<ul>
+  <li>Big code refactor to simplify development. Developers can no longer use the memory efficient interfaces (next(), hasNext(), etc.). Now all peak list reading must be done using the getPeakList() method, which greatly simplifies the existing code and makes it much easier to include meta-information from formats such as mzXML, mzData, and MGF.</li>
+  <li>Added support for using Bruker's CompassXport utility to allow .fid, .yep, .baf, and AutoXecute run for LCMALDI files to be read by the IO framework. Users must manually install CompassXport to use this functionality, and the CompassXport license explicitly states that users may not use it as part of a commercial product.</li>
+  <li>Added read support for X!Tandem output files and files generated by TheGPM. These files are in an XML-compatible format.</li>
+  <li>Added read support for the NIST '.msp' format.</li>
+  <li>Added read support files that are GZIP compressed. The IO Framework will automatically, based on the extension, uncompress the file and pass it to the appropriate PeakListReader instance.</li>
+  <li>Added Neil Swainston's patch that included multiple fixes for converting from .mgf to .mzData to .mgf.</li>
+</ul>
+<h2><a name="changes"></a>Changes since 4.4 (134)</h2>
+<ul>
+  <li>Major updates to the documentation and styles. This is for submission of the 5.0 release as a Bioinformatics application note.</li>
+  <li>Added support for reading WIFF files using the wiff2dta tool.</li>
+  <li>Added support for reading RAW files using the Sashimi project's ReAdW tool.</li>
+  <li>Fixed several typos in the list of other software project. Thanks to David Creasy for pointing these out. Also added the "Proteios Project" link.</li>
+  <li>Small update that increases compatibility between X Tandem and generated MGF files.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 4.3 (Revision: 120)</h2>
+<ul>
+  <li>Rolled in Tomas Pluskal's mzData reader fixes. Some logical refactors and tweaks to generally improve reading mzData files.</li>
+  <li>Several documentation fixes to the Java API docs.</li>
+  <li>Added a "links" section for links to other code that can read/write mass spec file formats. This is primarily the same list David Creasy showed at the PSI workshop.</li>
+  <li>Added read support for the RAW format using the Thermo Finnigan's DLL file. This code is in beta-stage and will be finalized in version 5.0</li>
+  <li>Updated the documentation to properly show version and build numbers. The build.xml script now automatically sets these strings.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 4.2 (Revision: 112)</h2>
+<ul>
+  <li>Added beta-support for writing mzXML format. Release 5.0 will stabilize on the code.</li>
+  <li>Changed the GUI conversion tool to report exceptions to a user. Previously, errors would be quietly ignored. Several users reported this as a source of confusion.</li>
+  <li>Added several regression tests to ensure that the DTA, PKL, and MGF PeakListReader classes properly work.</li>
+  <li>Fixed the DTA bug where parent mass over charge was being incorrectly calculated when converting from MGF files. Now the DTA parent mass is always the singley charged peptide's mass.</li>
+  <li>Fixed minor bugs with the DTA and PKL peak lists readers that would sometimes omit the first peak in a peak list.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 4.1 (Revision: 67)</h2>
+<ul>
+  <li>Added beta-support for writing mzXML format. Release 5.0 will stabilize on the code.</li>
+  <li>Changed the GUI conversion tool to report exceptions to a user. Previously, errors would be quitly ignored.</li>
+  <li>Added several regression tests to ensure that the DTA, PKL, and MGF PeakListReader classes properly work.</li>
+  <li>Fixed the DTA bug where parent mass over charge was being incorrectly calculated when converting from MGF files. Now the DTA parent mass is always the singly charged peptide's mass.</li>
+  <li>Fixed minor bugs with the DTA and PKL peak lists readers that would sometimes omit the first peak in a peak list.</li>
+  <li>Added reading functionality for nucleotide sequences from BLAST databases.</li>
+  <li>Added the MissedCleavePeptideReader class that will do missed cleaves for any of the existing peptide readers.</li>
+  <li>Added the peptide reading code that will take a series of residues and make appropriate peptides for it in. The NonspecificPeptideReader and TrypticPeptideReader classes have been added and they do the self-named functions.</li>
+  <li>Added a pop-up box to the GUI notifying a user when conversion is complete as to avoid confusion.</li>
+  <li>Fixed mascot reader/writer to proper keep meta-information, particularly in the case of concatenating files.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 4.0 (Minor Release 4.1)</h2>
+<ul>
+  <li>Updated user docs with an explicit example of converting from T2D to plain text or mzData.</li>
+  <li>Added in the IO-T2D project libraries. Users can now read and write in Applied Biosystem's T2D format.</li>
+  <li>Added in Jarret Falkner's mzData writing code. mzData files may now be created via the framework.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 3.0 (Major Release 4.0)</h2>
+<ul>
+  <li>Added support for reading any known format that is compressed in a ZIP archive. Now you can compress your peak list data and not have to worry about decompressing it before using the framework.</li>
+  <li>Added Jarret Falkner's mzData file format support. Peak Lists and spectra in mzData format can now be read.</li>
+  <li>Added Jarret Falkner's mzXML file format support. Peak Lists and spectra in mzXMl format can now be read.</li>
+  <li>Simplified Reader/Writer testing. The framework now lets you specify/load custom reader and writer objects, which means it is easier than every to test your code.</li>
+  <li>Dominic Battre's MGF reader patch has been applied. The MGF reader is now handles comments and various different uses of whitespace characters.</li>
+  <li>Developers can now dynamically register PeakListReader and PeakListWriter objects for use with the framework.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 2.0 (Major Release 3.0)</h2>
+<ul>
+  <li>Added FASTA utility programs including a protein parser, a tryptic peptide parser, and a statics generator.</li>
+  <li>Added a peak-picking framework for converting spectra in to peak lists.</li>
+  <li>Added the peak list filtering framework, including several example filters such as an intensity normalization filter, a intensity thresholding filter, a dynamic range filter, and a multicharge deconvolution filter.</li>
+  <li>Added full MGF read/write support, including all meta-information.</li>
+  <li>Added full PKL write support.</li>
+  <li>Added full DTA write support. If multiple peak lists are written, only the first is saved in the file.</li>
+  <li>Fixed DTA reader to properly convert m/z to what a mass spectrometer would observe.</li>
+  <li>Added utility class for streaming peak list conversion and streaming peak list printing.</li>
+  <li>Added an Frequently Asked Questions (FAQ) to the user documentation.</li>
+  <li>Added streaming write support for low memory environments.</li>
+  <li>Added proper PKL read/write support.</li>
+</ul>
+
+<h2><a name="changes"></a>Changes since 1.0 (Major Release 2.0)</h2>
+<ul>
+  <li>Added PKL read support.</li>
+  <li>Added DTA read/write support.</li>
+  <li>Added example code for reading/printing peak list information. The program also serves as an abstraction point for piping peak list information in to a shell script.</li>
+  <li>Added example code for converting between peak list formats.</li>
+  <li>Updated Java Docs and fixed several formating bugs.</li>
+</ul>
+
+<h2><a name="knownformats"></a>Format Information</h2>
+<p>The following peak list formats are supported, to the extend documented here.</p>
+
+<h3><a name="bruker"></a>Bruker: <span class="fileformat">.baf</span>, <span class="fileformat">.fid</span>, <span class="fileformat">.yep</span>, and <span class="fileformat">AutoExecute runs of LCMALDI</span></h3>
+<p>Read support for several of Bruker's file formats is implemented by wrapping Bruker's CompassXport tool. This tool can be freely downloaded from Bruker's site after registering and logging in -- instructions for locating the tool are provided from both <a href="http://www.ionsource.com/functional_reviews/CompassXport/CompassXport.htm">IonSource</a> and <a href="http://www.bioinformaticssolutions.com/products/peaks/support/bruker.php">Bioinformatics Solutions Inc.</a>. Use the following steps to make the CompassXport tool work with the IO Framework.</p>
+<ol>
+  <li>Download and install the CompassXport tool. It might be tricky to find, use the instructions provided from either <a href="http://www.ionsource.com/functional_reviews/CompassXport/CompassXport.htm">IonSource</a> or <a href="http://www.bioinformaticssolutions.com/products/peaks/support/bruker.php">Bioinformatics Solutions Inc.</a></li>
+  <li>Copy CompassXport.exe to <code>C:/Program Files/ProteomeCommons.org/IO/CompassXport.exe</code>. Note, if this location doesn't contain the file the IO Framework will automatically try <code>C:/Program Files/Common Files/Bruker Daltonik/AIDA/export/CompassXport.exe</code>, which is where Bruker normally installs it.</li>
+  <li>Convert and use any of the Bruker file formats listed below.</li>
+</ol>
+<p><b><i>Special Note:</i></b> When using the compassXport tool from Bruker an mzXML is generated by CompassXport then converted by the IO Framework in to the desired format. If you want mzXML and you want the exact mzXML that CompassXport produces, select the "Don't Convert" option.</p>
+<p>Read support exists for the the following Bruker file formats.</p>
+<dl>
+  <dt>.baf (<a href="http://www.bdal.de/modux3/modux3.php?pid=,,,01,01,006,017,0&rid=004,000,000,01,01,007,003,0&search=microtof&width=1920&height=1200">micrOTOF</a>, <a href="http://www.bdal.de/modux3/modux3.php?pid=105,003,004,01,01,006,047,0&rid=,,,01,01,006,017,0&width=1920&height=1200">micrOTOF-Q</a>, and <a href="http://www.bdal.de/modux3/modux3.php?pid=105,003,003,01,01,006,019,0&rid=105,003,004,01,01,006,047,0&width=1920&height=1200">ultraOTOF-Q</a>)</dt>
+  <dd>Read support exists for <span class="fileformat">.baf</span> data via exporting data using the CompassXport tool. If you have the tool installed, the IO Framework will automatically support this format.</dd>
+
+  <dt>.yep (<a href="http://www.bdal.de/modux3/modux3.php?pid=105,002,004,01,01,006,016,0&rid=105,002,000,01,01,006,003,0">esquire4000</a>, <a href="http://www.bdal.de/modux3/modux3.php?pid=105,002,003,01,01,006,015,0&rid=105,002,000,01,01,006,003,0">esquire6000</a>)</dt>
+  <dd>Read support exists for <span class="fileformat">.yep</span> data via exporting data using the CompassXport tool. If you have the tool installed, the IO Framework will automatically support this format.</dd>
+
+  <dt>.fid (<a href="http://www.bdal.de/modux3/modux3.php?pid=105,001,001,01,01,006,007,0&rid=105,001,000,01,01,006,002,0">microflex</a>, <a href="http://www.bdal.de/modux3/modux3.php?pid=105,001,006,01,01,006,049,0&rid=105,001,000,01,01,006,002,0">microflex LT</a>)</dt>
+  <dd>Read support exists for <span class="fileformat">.fid</span> data via exporting data using the CompassXport tool. If you have the tool installed, the IO Framework will automatically support this format.</dd>
+
+  <dt>AutoXecute run for LCMALDI (<a href="http://www.bdal.de/modux3/modux3.php?pid=105,001,000,01,01,006,011,0&rid=105,001,000,01,01,006,002,0">autoflex II and autoflex II TOF/TOF</a>, <a href="http://www.bdal.de/modux3/modux3.php?pid=105,001,000,01,01,006,009,0&rid=105,001,000,01,01,006,002,0">ultraflex II and ultraflex II TOF/TOF</a>)</dt>
+  <dd>Read support exists for AutoXecute runs for LCMALDI data via exporting data using the CompassXport tool. If you have the tool installed, the IO Framework will automatically support this format.</dd>
+</dl>
+
+<h3><a name="mgf"></a>Mascot Generic Format <span class="fileformat">.mgf</span></h3>
+<p>MGF file format support is based on Matrix Science LLC's generic format. Complete MGF format support is provided by this framework; however, meta-information support is not well tested.</p>
+<p>Helpful links</p>
+<ul>
+  <li><a href="http://www.matrixscience.com">Matrix Science's Homepage</a></li>
+  <li><a href="http://www.matrixscience.com/help/data_file_help.html">Mascot Generic Format documentation page</a></li>
+</ul>
+
+<h3><a name="dta"></a>Sequest <span class="fileformat">.dta</span></h3>
+<p>DTA file format support is based on the files used by the Sequest search algorithm. Complete DTA file support is provided by this framework. Any file ending with ".dta" is treated as if it is in the sequest DTA format.</p>
+
+<p><b><u>PLEASE NOTE!</u></b> The IO Framework's normal behavior deviates when handling DTA files. DTA files are intended to have one peak list per file with a known charge. Tools such as Sequest assume this and might not work properly if you include multiple peak lists in one DTA file (i.e. treat it like a PKL). The IO Framework will automatically "explode" peak list files that contain more than one peak list if they are converted to DTA. You will get several files, each with one peak list, named after the original, e.g. example.dta, example.2.dta, example.3.dta, etc. If no charge information is known, you'll also get files for charge states 1 through 3, e.g. example.1.1.dta, example.1.2.dta, etc. This is done to make the default IO Framework behavior work for the majority of use cases. Note, as a developer you can toggle the <code>setExplode(boolean)</code> to disable this feature.</p>
+<p><b><u>PLEASE ALSO NOTE!</u></b> DTA only handles data that includes precursor ion information, i.e. MSMS, MSMSMS, etc. but not MS. The default behavior of the DTA writer is to ignore MS peak lists. Developers can change this at runtime by setting the <code>setIgnoreMS(boolean)</code> flag.</p>
+
+<p>Helpful links</p>
+<ul>
+  <li><a href="http://www.matrixscience.com/help/data_file_help.html#DTA">Matrix Science's .DTA file format description</a></li>
+</ul>
+
+<h3><a name="pkl"></a>Waters/Micromass <span class="fileformat">.pkl</span> and <span class="fileformat">.raw (directory structure)</span></h3>
+<p>Waters uses two formats to represent mass spectrometry data via the MassLynx program. The <span class="fileformat">.raw/ directory structure</span> represents various forms of the raw data coming from a mass spectrometer. The <span class="fileformat">.pkl</span> format is a plain-text file containing one or more centroided, monoisotopic peak list of a <span class="fileformat">.raw/ directory structure</span>.</p>
+<p>Phil Andrews, University of Michigan, through collaboration with Waters has implemented a free-to-use Java library for the IO Framework that can read all of the Waters file formats. Waters has shown great support for the IO Framework and our efforts to provide free support to the proteomics community for reading mass spec file formats. If you appreciate our efforts to support the Waters file formats, please take time to Waters -- thanking your Waters sales rep is likely the best way to let the higher-ups know.</p>
+<p>Special thanks to Ronan O'Malley and James Langridge at Waters.</p>
+
+<p><i><b>Please note: </b></i> the Waters .raw/ directory structure support is still considered unstable and is not part of the default IO Framework releases. Please contact jfalkner@umich.edu if you'd like to use this beta code.</p>
+
+<p>PKL file format support is based on Micromass's PKL file format. Complete read and write support for the PKL format is implemented, including multiple peak lists in a single file.</p>
+
+<p><b><u>PLEASE NOTE!</u></b> PKL only handles data that includes precursor ion information, i.e. MSMS, MSMSMS, etc. but not MS. The default behavior of the PKL writer is to ignore MS peak lists. Developers can change this at runtime by setting the <code>setIgnoreMS(boolean)</code> flag.</p>
+
+<p>Helpful links</p>
+<ul>
+  <li><a href="http://www.matrixscience.com/help/data_file_help.html#PKL">Matrix Science's PKL file format description</a></li>
+</ul>
+
+<h3><a name="txt"></a>Plain Text</h3>
+<p>Plain text (.txt) is not really a MS or MSMS data format, but it is often what you want when manipulating data by hand. Full support exists for both reading and writing peak lists in plain-text format, e.g. you can readily export a .raw file to a tab-delimited file that you can view in a text editor. Specialized support existing for both MS Windows and non-Windows users, particularly support for people who want to look at spectra in notepad.</p>
+<p>The plain-text format follows these three rules for both the reader and writer:</p>
+<ol>
+  <li>If it is MSMS data the first line contains three tab-delimited values: the precursor ion's m/z, intensity, and charge.</li>
+  <li>Each peak is saved on its own line with the following two tab-delimited values: fragment m/z and intensity.</li>
+  <li>The normal plain-text writer delimits newline using just the "\n" character. The notepad-friendly plain-text writer delimits newline using the "\n\r" character combo. See <a href="http://en.wikipedia.org/wiki/Newline">wikipedia's writeup</a> for why this helps Windows users.</li>
+</ol>
+
+<p>Here is an example of what a peak list with a precursor m/z of 1000, a intensity of 2200, and a charge of 1, with two peaks of m/z 100 and 200, and intensity 1 and 2, respectively.</p>
+<pre>1000	2200	1
+100	1
+200	2</pre>
+
+<p>Note that the above is both an input and output format. If you wanted to make up a peak list, you could serialize your data in the above format and it'd be readable by the IO Framework and any tool that uses the IO Framework.</p>
+
+<h3><a name="abi"></a>Applied Biosystems: <span class="fileformat">.t2d</span>, <span class="fileformat">.bic</span>, and <span class="fileformat">.wiff</span></h3>
+<p>Applied Biosystems has a number of file formats including the <span class="fileformat">T2D</span> format used by their MALDI TOFTOF 4700 and 4800 instruments and the <span class="fileformat">.bic</span> file format used by the Voyager mass spectrometer.</p>
+<dl>
+  <dt>.t2d</dt>
+  <dd>Complete support is provided for reading and writing files in the T2D format. The support is based on the ProteomeCommons.org IO-T2D project, which was created in collaboration with Applied Biosystems. Further documentation may be found in the "ProteomeCommons.org IO-T2D" project at <a href="http://www.proteomecommons.org">ProteomeCommons.org</a></dd>
+
+  <dt>.bic</dt>
+  <dd>Voyager instruments produces a .bic file and a text file for a continuous spectrum. Support for reading and writing this format is currently being worked on.</dd>
+  
+  <dt>.wiff</dt>
+  <dd>
+    <p>Support exists for reading Analyst WIFF files from a QStar or QTrap 2000 or QTrap 4000 using the Analyst software libraries and the wiff2dta tool<sup><a href="#wiff1">1</a></sup>. In order to use this functionality you must be using Microsoft Windows as your operating system and you must have installed ABI's Analyst and have a local copy of the wiff2dta program. Use the following steps to get everything installed.</p>
+
+    <ol>
+      <li>Install ABI's Analyst software package.</li>
+      <li>Download a copy of the wiff2dta program from <a href="http://sourceforge.net/projects/protms/">http://sourceforge.net/projects/protms/</a>. <a href="http://sourceforge.net/project/showfiles.php?group_id=109078&package_id=133212">This</a> should be a direct link to the download page.</li>
+      <li>When using the IO framework do one of the following</li>
+      <ul>
+        <li>Set the JVM parameter "<code>-Dwiff2data [wiff2dta.exe]</code>" replacing <code>[wiff2dta.exe]</code> with wherever you put the copy of the program, e.g. "<code>-Dwiff2data wiff2dta_1108_analyst141.exe</code>".</li>
+        <li>Copy the wiff2dta program executable to your working directory, i.e. the directory you are executing Java from.</li>
+        <li>Copy the wiff2dta program in to your classpath and name it "<code>wiff2dta.exe</code>"</li>
+      </ul>
+    </ol>
+
+    <p><b>References</b></p>
+    <p class="reference"><a name="wiff1"></a>Andreas M Boehm, Robert P Galvin, and Albert Sickmann, "Extractor for ESI quadrupole TOF tandem MS data enabled for high throughput batch processing", BMC Bioinformatics 2004, 5:162  doi:10.1186/1471-2105-5-162</p>
+  </dd>
+  
+</dl>
+
+<h3><a name="raw"></a>Thermo Finnigan <span class="fileformat">.raw</span></h3>
+<p>Read support is available for Thermo Finnigan's RAW file format via the ReAdW package from the Sashimi project. You must have Thermo Finnigan's XCalibur DLL to use this functionality. Use the following steps to enable RAW file reading.</p>
+
+<ol>
+  <li>Install Thermo Finnigan's XCalibur 2.0+</li>
+  <li>Download a copy of the ReAdW program from <a href="http://sashimi.sf.net">http://sashimi.sf.net</a></li>
+  <li>Add ReAdW.exe to <code>C:/Program Files/ProteomeCommons.org/IO/ReAdW.exe</code>. If you have ReAdW.exe installed elsewhere, the GUI will prompt you for its location.</li>
+</ol>
+<p><b><i>Special Note:</i></b> When using the ReAdW tool to read .raw files a mzXML file is generated by ReAdW then converted by the IO Framework in to the desired format. If you want mzXML and you want the exact mzXML that ReAdW produces, select the "Don't Convert" option.</p>
+
+
+<h3><a name="dataXML"></a>ISB/PSI lead mzData and mzXML merge effort <span class="fileformat">dataXML</span></h3>
+<p>Efforts lead by the ISB and PSI are underway to merge the mzXML and mzData file formats. The working name for the new file format is dataXML. Beta-support exists for this file format; however, currently very few tools use this format and certainly it'll change before the final version is released. You are not encouraged to use the beta dataXML format unless you simply want to see what it looks like.</p>
+<p>Select the "dataXML (beta)" file format option to use dataXML file format. Both read and write support exists; however, full support for dataXML's meta-data is not exposed through the GUI.</p>
+
+
+<h3><a name="mzXML"></a><span class="fileformat">mzXML</span></h3>
+<p>mzXML is an open, XML based file format designed by Systems Biology. The framework supports reading either peak list or spectral data that is in the mzXML file format support as described n the <a href="http://sashimi.sourceforge.net/software_glossolalia.html">mzXML schema and documentation</a>. This framework provides read support of peak lists and spectra in *.mzXML files. Proper stream-based XML parsing is used, allowing for mzXML files of any size to be used. Proper Base64 decoding is also used, allowing for data in either 32 bit or 64 bit precision.</p>
+<p>mzXML support by version</p>
+<dl>
+  <dt>mzXML version 1.1.1</dt>
+  <dd>Near complete read and write support is implemented for mzXML 1.1.1 with lack of complete support for spotting and separation information. Any document with the mzXML 1.1.1 schema declared will be automatically read. Alternatively, files ending in <code>.1.1.1.mzxml.xml</code> will automatically be treated as files in mzXML 1.1.1 format.</dd>
+
+  <dt>mzXML version 2.0</dt>
+  <dd>Near complete read and write support is implemented for mzXML 2.0 with lack of complete support for spotting and separation information. Any document with the mzXML 2.0 schema declared will be automatically read. Alternatively, files ending in <code>.2.0.mzxml.xml</code> will automatically be treated as files in mzXML 2.0 format.</dd>
+
+  <dt>mzXML version 2.1</dt>
+  <dd>Near complete read and write support is implemented for mzXML 2.1 with lack of complete support for spotting and separation information. Any document with the mzXML 2.1 schema declared will be automatically read. Alternatively, files ending in <code>.2.1.mzxml.xml</code> will automatically be treated as files in mzXML 2.1 format.</dd>
+</dl>
+<p>Helpful mzXML links.</p>
+<ul>
+  <li><a href="http://sashimi.sourceforge.net/software_glossolalia.html">mzXML homepage</a></li>
+  <li><a href="http://sashimi.sourceforge.net/schema_revision/mzXML_2.1/mzXML_idx_2.1.xsd">mzXML schema</a></li>
+  <li><a href="http://sashimi.sourceforge.net/schema_revision/mzXML_2.1/Doc/mzXML_2.1_tutorial.pdf">mzXML supplementary documentation</a></li>
+</ul>
+
+<h3><a name="mzData"></a>Proteomics Standards Initiative (PSI) <span class="fileformat">.mzData</span></h3>
+<p>mzData is an open, XML based file format designed by US HUPO. The framework supports reading and writing data that is in the mzData file format as defined by the <a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.xsd">schema</a> and accompanying <a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.html">documentation</a>. Proper stream-based XML parsing is used, allowing for mzData files of any size to be used. Proper Base64 decoding is also used, allowing for data in either big endian or little endian format and data in either 32 bit or 64 bit precision.</p>
+<dl>
+  <dt>mzData version 1.04</dt>
+  <dd>Read support for mzData 1.04 is provided by the mzData 1.05 reader described below. Write support is currently not available for mzData 1.04.</dd>
+
+  <dt>mzData version 1.05</dt>
+  <dd>Read and write support exist for the mzData 1.05 format. Any document with the mzData 1.05 schema declared will be automatically read. Alternatively, files ending in <code>..mzdata</code> will automatically be treated as files in mzData 1.05 format.</dd>
+</dl>
+<p>Helpful mzData links.</p>
+<ul>
+  <li><a href="http://psidev.sourceforge.net/ms/#mzdata">mzData homepage</a></li>
+  <li><a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.xsd">mzData schema</a></li>
+  <li><a href="http://psidev.sourceforge.net/ms/xml/mzdata/mzdata.html">mzData supplementary documentation</a></li>
+  <li><a href="https://sourceforge.net/project/showfiles.php?group_id=65472">mzData example files</a></li>
+  <li><a href="https://lists.sourceforge.net/lists/listinfo/psidev-ms-dev">mzData e-mail list</a></li>
+</ul>
+
+<h3><a name="msp"></a>National Institute of Standards and Technology (NIST) Library of Peptide Ion Fragmentation Spectra <span class="fileformat">.msp</span></h3>
+<p>Steve Stein from the NIST has been working on creating high quality spectral libraries of MS/MS data. This data is available in several different formats along with a search tool. You can download the data from several locations including ProtoemeCommons.org. The primary format intended for other's use is a custom, simple, plain-text format that uses the '.msp' extension.</p>
+<p>The IO framework includes read support for data in the .msp file format. Along with the standard MS/MS peak list information the file format also includes information about the peptide sequence that most likely matches each spectrum. If you are interested in accessing this peptide sequence information, you can sub-cast any PeakList object returned by the MSPPeakListReader class to MSPPeakList as illustrated below.</p>
+<div style="margin:20px;padding:10px;background:#dddddd;border-style:solid;border-width:1px;border-color:black;">
+<pre>PeakListReader plr = GenericPeakListReader.getPeakListReader("C:/data/example.msp");
+// get the abstract PeakList object -- no information about peptide sequence
+PeakList pl = plr.getPeakList();
+// sub-cast to get peptide sequence info, if desired.
+MSPPeakList msppl = (MSPPeakList)pl;
+msppl.getPeptides();
+...</pre>
+</div>
+
+<h3><a name="gpm"></a>X!Tandem Output Files (aka TheGPM output) <span class="fileformat">.xml</span>, <span class="fileformat">.thegpm.xml</span>, <span class="fileformat">.tandem.xml</span>, <span class="fileformat">.amethyst.xml</span>, <span class="fileformat">.opal.xml</span>, <span class="fileformat">.jasper.xml</span></h3>
+<p>The <a href="http://www.thegpm.org">X!Tandem</a> MS/MS search engine, which is used by TheGPM, produces output files that include both the identified peptide and protein sequences and the MS/MS peak lists that where identified. Several data sets, including <a href="http://www.thegpm.org/quartz/index.html">Jasper, Amethyst, and Quartz</a>, are published by the TheGPM.org in this format. The ProteomeCommons.org IO Framework can be used to read through X!Tandem output files and retreive the included peak lists. This is a convenient method of converting peak lists that X!Tandem identifies in to format that may be more familiar such as MGF or DTA.</p>
+<p>Peptide and protein information associated with peak lists in X!Tandem output files are included in PeakList objects returned by the X!Tandem <code>PeakListReader</code> implementation. If you wish to access associated peptide sequences, sub-cast the <code>PeakList</code> object to a <code>XTandemOutputPeakList</code> as illustrated below.</p>
+<div style="margin:20px;padding:10px;background:#dddddd;border-style:solid;border-width:1px;border-color:black;">
+<pre>PeakListReader plr = GenericPeakListReader.getPeakListReader("C:/data/example.msp");
+// get the abstract PeakList object -- no information about peptide sequence
+PeakList pl = plr.getPeakList();
+// sub-cast to get peptide sequence info, if desired.
+XTandemOutputPeakList xtopl = (XTandemOutputPeakList)pl;
+xtopl.getPeptides();
+...</pre>
+</div>
+
+
+<h3><a name="compression"></a>Auto-compression/decompression support</h3>
+<p>Support exists for seamlessly using several compression algorithms with peak list formats. These compression formats are <b>not</b> peak list formats themselves, rather formats that can compress existing peak list files. In cases of the very verbose XML formats such as mzData and mzXML the compression can save lots of space.</p>
+
+<dl>
+  <dt><a name="zip"></a>ZIP</dt>
+  <dd>
+    <p>Complete read/write support exists for the ZIP format. Any file ending with <code>.&lt;extension&gtl;.zip</code>, e.g. <code>example.mgf.zip</code> uses .mgf as the extension, will be read or serialized assuming use of the ZIP format.</p>
+    <p>The ZIP algorithm supports more than one file bundled together. The IO Framework will only read the first peak list included in a ZIP with multiple files. Note, the ZIP algorithm is possible the most widely supported algorithm, but it normally doesn't provide as good of compression as LZMA or bzip2.</p>
+    <p>Here are some helpful ZIP links</p>
+    <ul>
+      <li><a href="http://www.info-zip.org/pub/infozip/Zip.html">Info-ZIP Homepage</a></li>
+      <li><a href="http://www.bleepingcomputer.com/tutorials/tutorial105.html">How to create and extract a Zip File in Windows ME/XP/2003</a></li>
+    </ul>
+  </dd>
+
+  <dt><a name="gzip"></a>GZIP</dt>
+  <dd>
+    <p>Complete read/write support exists for the GZIP format. Any file ending with <code>.&lt;extension&gtl;.gzip</code> or <code>.&lt;extension&gtl;.gz</code>, e.g. <code>example.mgf.gz</code> uses .mgf as the extension, will be read or serialized assuming use of the GZIP format.</p>
+    <p>Here are some helpful GZIP links.</p>
+    <ul>
+      <li><a href="http://www.gzip.org/">GZIP Homepage</a></li>
+    </ul>
+  </dd>
+
+  <dt><a name="b2zip"></a>bzip2</dt>
+  <dd>
+    <p>Complete read/write support exists for the BZIP2 format. Any file ending with <code>.&lt;extension&gtl;.bzip2</code> or <code>.&lt;extension&gtl;.gz</code>, e.g. <code>example.mgf.gz</code> uses .mgf as the extension, will be read or serialized assuming use of the BZIP2 format.</p>
+    <p>Here are some helpful BZIP2 links.</p>
+    <ul>
+      <li><a href="http://www.bzip.org/">bzip2 Homepage</a></li>
+    </ul>
+  </dd>
+
+  <dt><a name="LZMA"></a>LZMA</dt>
+  <dd>
+    <p>Complete read/write support exists for the LZMA format. Any file ending with <code>.&lt;extension&gtl;.LZMA</code> or <code>.&lt;extension&gtl;.gz</code>, e.g. <code>example.mgf.gz</code> uses .mgf as the extension, will be read or serialized assuming use of the LZMA format.</p>
+    <p>LZMA is generally the best compression algorithm available; however, the benefit is normally marginal (5-10%) compared to the other formats.</p>
+    <p>Here are some helpful LZMA links.</p>
+    <ul>
+      <li><a href="http://www.7-zip.org/sdk.html">LZMA SDK Homepage, including C++, C#, and Java implementations</a></li>
+      <li><a href="http://www.7-zip.org">7-zip Homepage</a></li>
+    </ul>
+  </dd>
+
+</dl>
+
+<h2><a name="faq"></a>Frequently Asked Questions (FAQ)</h2>
+<p>This is a list of frequently asked questions based on user e-mails from the <a href="http://www.proteomecommons.org">ProteomeCommons.org e-mail list</a>.</p>
+<ul>
+  <li><a href="#dontConvert">What does the "Don't Convert" option do?</a></li>
+  <li><a href="#merge">What does the "Merge" option do?</a></li>
+  <li><a href="#no-jit-debugging">How do I disable that annoying popup box, aka "Unhandled Win32 Exception" or "Windows Error Reporting?"</a></li>
+  <li><a href="#whereconvert">Where is that peak list conversion tool?</a></li>
+  <li><a href="#whydoesntjar">Why doesn't "<code>java -jar ProteomeCommons.org-IO.jar</code>" work?</a></li>
+  <li><a href="#wheredoigethelp">Where do I get help?</a></li>
+</ul>
+
+<h3><a name="dontConvert"></a>What does the "Don't Convert" option do?</h3>
+<p>A few of the file formats supported by the IO Framework rely on other tools. Namely ReAdW for .raw files and CompassXport for Bruker files. In these cases the associated tool makes an mzXML file and the IO Framework converts that file to the desired final file format.</p>
+<p>The "Don't Convert" option tells the IO Framework to leave the mzXML file alone. Instead of using the mzXML as an intermediate file a copy of it will be saved in the selected output directory.</p>
+
+<h3><a name="merge"></a>What does the "Merge" option do?</h3>
+<p>The "Merge" option will concat all of the input files in to one single output file. Handy for squeezing many files in to a single .mgf for Mascot searches and the like.</p>
+
+
+<h3><a name="no-jit-debugging"></a>How do I disable that annoying popup box, aka "Unhandled Win32 Exception" or "Windows Error Reporting"?</h3>
+<p>A popup box may appear whenever native Windows code throws an exception, which may happen when using native libraries such as <a href="http://sashimi.sf.net">ReAdW.exe</a> to read data in the RAW file format. This popup box is Window's Just-In-Time debugger (JIT), and it mostly appears on machines that have installed Visual Studio. To disable this debugger, delete the following registry keys <a href="http://msdn2.microsoft.com/en-us/library/5hs4b7a6.aspx">as specified by the MSDN documentation</a>.</p>
+
+
+<div style="margin:20px;padding:10px;background:#dddddd;border-style:solid;border-width:1px;border-color:black;">
+<p><b>Disabling JIT-attach Debugging</b></p>
+<p>After Visual Studio is installed on a server, the default behavior when an unhandled exception occurs is to show an Exception dialog that requires user intervention to either start Just-In-Time debugging or ignore the exception. This may be undesirable for unattended operation. To configure the server to no longer show a dialog when an unhandled exception occurs (the default behavior prior to installing Visual Studio), use the registry editor to delete the following registry keys:</p>
+<ul>
+  <li>On 32 bit machines</li>
+  <ul>
+    <li>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug\Debugger</li>
+    <li>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\DbgManagedDebugger</li>
+  </ul>
+  <li>On 64 bit machines</li>
+  <ul>
+    <li>HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug\Debugger</li>
+    <li>HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\DbgManagedDebugger</li>
+  </ul>
+</ul>
+</div>
+
+<p>If you are a developer, you'll probably want to enable the JIT when coding. To do this, follow the below instructions from <a href="http://msdn2.microsoft.com/en-us/library/2ac5yxx6.aspx">MSDN</a>.</p>
+
+<div style="margin:20px;padding:10px;background:#dddddd;border-style:solid;border-width:1px;border-color:black;">
+<p><b>Enabling JIT-attach Debugging</b></p> 
+<p>JIT-attach debugging is the phrase used to describe attaching a debugger to an executable image that throws an uncaught exception. In unmanaged code, it is what happens when you see a message box that invites you to:</p>
+<ul>
+  <li>Click OK to terminate the program</li>
+  <li>Click CANCEL to debug the program</li>
+</ul>
+
+<p>If you click CANCEL, a debugger is started and attached to the process. The registry key that controls this is called <code>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\Current Version\AeDebug</code>.</p>
+<p>For an application that includes managed code, the common language runtime will present a similar dialog to JIT-attach a debugger. The registry key that controls this option is called <code>HKEY_LOCAL_MACHINE\Software\Microsoft\.NETFramework\DbgJITDebugLaunchSetting</code>.</p>
+
+<ul>
+  <li>If value = 0, prompt the user by means of a message box. This only applies to processes that are interactive with the desktop; services and other noninteractive processes will terminate.<br/>
+      In the .NET Framework versions 1.0 and 1.1, or the .NET Framework version 2.0 on Windows 98 and Windows Me, the message box choices are:</li>
+  <ul>
+    <li>Continue. This results in a stack dump to the console and process termination.</li>
+    <li>Attach a debugger. In this case, the runtime spawns the debugger listed in the DbgManagedDebugger registry key. If none is found, the process is terminated.</li>
+  </ul>
+  <li>In the .NET Framework version 2.0 on platforms other than Windows 98 and Windows Me, the choices are:</li>
+  <ul>
+    <li>Send. An error report is sent to Microsoft, followed by process termination. See http://winqual.microsoft.com for information on how to retrieve these reports.</li>
+    <li>Don't Send. This results in a stack dump to the console and process termination.</li>
+    <li>Debug. The runtime spawns the debugger listed in the DbgManagedDebugger registry key. If none is found, the process is terminated.</li>
+  </ul>
+  <li>If value = 1, simply return control. This results in a stack dump, after which the process is terminated.</li>
+  <li>If value = 2, spawn the debugger listed in the DbgManagedDebugger registry key.</li>
+  <li>If value = 16, in the .NET Framework version 2.0 only, the runtime presents the message box described above for processes that are interactive with the desktop. For processes that are not interactive, the runtime spawns the debugger listed in the DbgManagedDebugger registry key. This is the default setting for the .NET Framework version 2.0.</li>
+</ul>
+
+</div>
+
+<p>Finally, if you are doing batch processing of peak lists and you don't want it to be interrupted at all, you can also disable Windows XP error reporting. Follow the instructions described on <a href="http://support.microsoft.com/?kbid=310414">MSDN</a> also summarized below.</p>
+
+<div style="margin:20px;padding:10px;background:#dddddd;border-style:solid;border-width:1px;border-color:black;">
+<p><b>How to Configure and Use Error Reporting</b></p>
+<p>You can enable, disable, or modify the way that error reporting works on a Windows XP-based computer. When an error occurs, a dialog box is displayed that prompts you to report the problem to Microsoft. If you want to report the problem, technical information about the problem is sent to Microsoft over the Internet. You must be connected to the Internet to use the feature. If a similar problem has been reported by other users and information about the problem is available, you receive a link to a Web page that contains information about the problem.</p>
+
+<p>To access the settings for the reporting feature:</p>
+<ul>
+  <li>Click Start.</li>
+  <li>Right-click My Computer, then click Properties.</li>
+  <li>Click the Advanced tab.</li>
+  <li>Click Error Reporting.</li>
+</ul>
+<p>To configure the error reporting feature:</p>
+<ul>
+  <li>By default, error reporting is enabled. To disable it, click Disable error reporting. To continue to be notified when errors occur without being prompted to report the errors, click to select the But notify me when critical errors occur check box.</li>
+  <li>Specify whether you want to use error reporting for the Windows operating system, for programs, or for both Windows and programs.</li>
+  <li>To report errors only for selected programs, click Choose Programs, click All programs in this list, and then click the programs that you do not want to include.</li>
+  <li>To add a program that is not listed, click Add, type the name of the program, or click Browse to find the program on your computer.</li>
+  <li>If many programs are listed, you may want to create an exclude list. In the Do not report errors for these programs box, click Add, type the name of each program that you want to exclude from error reporting, or click Browse to find the program on your computer.</li>
+</ul>
+</div>
+
+<h3><a name="whereconvert"></a>Where is that peak list conversion tool?</h3>
+<p>The on-line GUI tool that converts peak lists is <a href="ConvertPeakList.jnlp">here</a>.</p>
+
+<h3><a name="whydoesntjar"></a>Why doesn't "<code>java -jar ProteomeCommons.org-IO.jar</code>" work?</h3>
+<p>The JAR file included with the code is not executable. It is intended to be used as a Java library, i.e. "java -cp ProteomeCommons.org-IO.jar <class file>". If you'd like to run the example programs from command line, try executing "<code>java -cp ProteomeCommons.org-IO.jar org.proteomecommons.io.util.PrintPeakList <i>peaklist file</i></code>", where you replace <i>peaklist-file</i> with the location of a real peak list.</p>
+
+<h3><a name="wheredoigethelp"></a>Where do I get help?</h3>
+<p>Generally speaking, this is free, open-source code. You don't get free tech support with your download. However, there are options for getting help. The best help comes straight from the people who made this code. If you are willing to hire the core developers to help with your problem or to teach you how the framework works, contact <a href="jfalkner@umich.edu">Jayson Falkner</a>. If you want free help, use the e-mail list at ProteomeCommons.org. Most of the developer and users of this framework are on that e-mail list, and it is the appropriate place to look for free advice.</p>
+
+<h2><a name="links"></a>Links</h2>
+<p>This is a list of links that references other projects that can read/write various mass spectrometry file formats. In most cases these are commercial tools that are either bundled with mass spectrometers or that cost a significant amount of money. If you know of a tool that isn't on this list, please send in the information to this project's developers.</p>
+<ul>
+  <dt><a href="http://sashimi.sf.net">Sashimi Project</a></dt>
+  <dd>The Institute for Systems Biology (ISB) started and has maintained a great collection of tools for reading and converting to the mzXML file format. Support exists for most of the popular file formats, particularly .raw; however, most of the software does require users to have vendor-specific binaries available.</dd>
+
+  <dt><a href="http://www.bruker-biosciences.com/">CompassXport</a></dt>
+  <dd>Bruker's CompassXport utility is a great, unofficially-supported tool from Bruker for reading the common data files generated by Bruker instruments. The tool dumps data in to mzXML format and it may be used in a batch mode. You must be registered and logged in to Bruker's website in order to download the CompassXport tool. Helpful instructions for doing so are provide by both <a href="http://www.ionsource.com/functional_reviews/CompassXport/CompassXport.htm">IonSource</a> and <a href="http://www.bioinformaticssolutions.com/products/peaks/support/bruker.php">Bioinformatics Solutions Inc.</a> </dd>
+
+  <dt><a href="http://sourceforge.net/projects/protms">wiff2dta</a></dt>
+  <dd>The wiff2dta program is designed to use the ABI Analyst binaries to efficiently export MS and MSMS data to a number of formats including mzXml and MGF. The program can run in either a interactive GUI mode or a batch mode.</dd>
+
+  <dt><a href="http://www.charlestoncore.org/docs/ccwiffer/usermanual.html">CCWiffer</a></dt>
+  <dd>CCWiffer is a software package designed to converting WIFF data files to the mzXML and mzData formats. Although, as of the PSI 2006 meeting it appeared to not successfully create either format.</dd>
+
+  <dt><a href="http://www.umiacs.umd.edu/~nedwards/research/PyMsXML.html">PyMsXML</a></dt>
+  <dd>PyMsXML is a python script for converting vendor specific mass spectrometry data files for Applied Biosystems' Q-Star, 4700, Mariner, and Voyager mass spectrometers from their raw binary form, to either of the emerging XML file formats for mass spectra: mzXML, from the Sashimi Glossolalia project of the Institute for Systems Biology (ISB); and mzData, from the Proteome Standards Initiative (PSI) project of the Human Proteome Organization (HUPO).</dd>
+
+  <dt><a href="http://www.appliedbiosystems.com/support/software/qstar/macros.cfm">Applied Biosystems WIFF to mzData</a></dt>
+  <dd>A WIFF to mzData translator from ABI.</dd>
+
+  <dt><a href="http://www.biocompare.com/productdetails/164508/item/7686/matrix/ProteinScape-from-Bruker-Daltonics.html">ProteinScape</a></dt>
+  <dd>Bruker Daltonics proteomics platform.</dd>
+
+  <dt><a href="http://www.thermo.com/com/cda/product/detail/1,,16483,00.html">BioWorks 3.2</a></dt>
+  <dd>BioWorks is Thermo Finnigan's proteomics platform and it can export in mzData format.</dd>
+  
+  <dt><a href="http://www.kratos.com/">Kratos Launchpad</a></dt>
+  <dd>We couldn't find proper documentation; however, this should be the tool for working with Shimadzu data and generating mzData documents.</dd>
+  
+  <dt><a href="http://www.waters.com/WatersDivision/contentd.asp?watersit=RHEY-5LHBSW">Waters ProteinLynx Global SERVER</a></dt>
+  <dd>Waters bioinformatics platform. It has many features including the ability to input and output data in mzData format.</dd>
+
+  <dt><a href="http://www.matrixscience.com/distiller.html">Mascot Distiller</a></dt>
+  <dd>"Mascot Distiller Workstation offers a single, intuitive interface to a wide range of native (binary) mass spectrometry data files. A unique algorithm, which fits each peak to a calculated isotope distribution, processes the raw data into high quality, de-isotoped peak lists. This core functionality can be extended by adding one or more toolboxes. These are optional collections of tools for specific tasks, such as Mascot search result review, automatic and manual de novo sequencing, and batch processing. There is also a developer's package that provides access to the API of the underlying COM library."</dd>
+
+  <dt><a href="http://mzmine.sourceforge.net/index.shtml">MZmime</a></dt>
+  <dd>"MZmine is a platform-independent software for data processing needed in differential analysis of LC/MS data, with applications in metabolomics and proteomics. The software is expandable to other types of data such as GC/MS and CE/MS. Our aim and motivation have been to develop a modular and vendor independent software package that enables easy integration of new algorithms and applications into the data processing pipeline."</dd>
+
+  <dt><a href="http://mzmine.sourceforge.net/index.shtml">The Proteios Project</a></dt>
+  <dd>A project designed to organize and share proteomics data. It can export in mzData format.</dd>
+
+  <dt><a href="http://biojava.org">BioJava Project</a></dt>
+  <dd>A Java project designed to provide a general set of tools for Bioinformatics developers including code that can read and manipulate protein sequences in FASTA files. No mass spectrometer file formats are supported.</dd>
+</ul>
+
+
+<h2><a name="todo"></a>Todo List</h2>
+<p>This is the list of features that need to be done. If you are interested in helping out, please get in touch.</p>
+<ul>
+  <li>Preserve MGF meta-data in concatinated peak lists. Currently MGF meta-data (specifically TITLE attributes) are being lost when peak lists are converted. Fix the MascotGenericFormatWriter to properly preserve this information.</li>
+  <li>Fix DTA conversion. If a parent mass isn't know Integer.MIN_VALUE is used.</li>
+</ul>
+
+<h2><a name="license"></a>Licensing Information</h2>
+<p>The goal of this project is to provide free, open-source code that anyone may use as they please; However, everyting in this project is strictly licensed under the Apache 2.0 license. This protects the authors and contributors of this project, and it encourages fair use of the code. A copy of the Apache 2.0 license may be found on-line at <a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a> or as plain text in the LICENSE.txt file included in this archive.</p>
+<p>In addition to the Apache 2.0 license it is requested that any person or organization that uses the ProteomeCommons.org IO Framework properly reference this project. In at least one public, appropriate place, please note that the "ProteomeCommons.org IO Framework" is being used, and provide a URL to <a href="http://www.proteomecommons.org/current/531">http://www.proteomecommons.org/current/531</a>.</p>
+
+<p align="center">If you have further questions or comments regarding this project, please contact <a href="mailto:jfalkner@umich.edu">Jayson Falkner</a></p>
+</body>
+</html>
